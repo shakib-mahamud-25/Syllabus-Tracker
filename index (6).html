@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Syllabus Tracker</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1b1f27;--mu:#6b7280;--bd:#e2e5ea;--ac:#2b4c7e;--acs:#e6edf7;--dg:#b3392f;--ok:#2f7d5b;--r:10px}
+[data-theme=dark]{--bg:#14171c;--card:#1c2028;--tx:#e8eaee;--mu:#9aa1ad;--bd:#2c323d;--ac:#8fb0e6;--acs:#233049;--dg:#ee7b6f;--ok:#6cc59c}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI","Noto Sans Bengali","Nirmala UI",Kalpurush,sans-serif;background:var(--bg);color:var(--tx)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.app{display:flex;min-height:100vh}
+#side{width:188px;padding:18px 10px;border-right:1px solid var(--bd);background:var(--card);display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh}
+.brand{font-weight:700;padding:4px 10px 16px;font-size:15px}
+.nv{background:none;border:0;text-align:left;padding:8px 10px;border-radius:8px;color:var(--mu)}
+.nv:hover{background:var(--bg)}
+.nv.on{background:var(--acs);color:var(--ac);font-weight:600}
+.gear{margin-top:auto}
+main{flex:1;min-width:0;padding:22px 28px 60px;max-width:1180px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:22px;margin:0}
+h2{font-size:17px;margin:0 0 12px}
+h3{font-size:15px;margin:0 0 8px}
+.acts,.acts2,.tb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn,.btn2,.ib{border-radius:8px;border:1px solid var(--ac);background:var(--ac);color:#fff;padding:6px 12px}
+[data-theme=dark] .btn{color:#10151d}
+.btn2{background:var(--card);color:var(--tx);border-color:var(--bd)}
+.btn2:hover{border-color:var(--ac)}
+.ib{background:none;border:0;color:var(--mu);padding:2px 6px}
+.ib:hover{color:var(--ac)}
+.ib.x:hover{color:var(--dg)}
+input,select,textarea{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:6px 9px}
+textarea{width:100%;min-height:60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.grid .card{margin:0}
+.mu,small{color:var(--mu)}
+.bad{color:var(--dg)}
+.ring{--p:0;width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--ac) calc(var(--p)*1%),var(--bd) 0);display:grid;place-items:center;flex:none}
+.ring span{background:var(--card);width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:20px}
+.flex{display:flex;gap:16px;align-items:center}
+.bar{height:7px;background:var(--bd);border-radius:6px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar i.sk{opacity:.4;background-image:repeating-linear-gradient(45deg,transparent 0 3px,rgba(255,255,255,.7) 3px 5px)}
+.lr{display:grid;grid-template-columns:1fr 44px;gap:4px 10px;align-items:center;margin:9px 0}
+.lr b{font-weight:500}
+.lr .bar{grid-column:1/3}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--card);padding:4px 10px;color:var(--mu)}
+.seg button.on{background:var(--acs);color:var(--ac);font-weight:600}
+.pill{font-style:normal;font-size:11px;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:0 7px;margin-left:5px;font-weight:400;color:var(--mu)}
+.st-ok{color:var(--ok)}.st-bad{color:var(--dg)}
+.cnts{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.cnts div{font-size:12px;color:var(--mu)}
+.cnts b{display:block;font-size:18px;color:var(--tx)}
+.empty{text-align:center;padding:60px 16px;background:var(--card);border:1px dashed var(--bd);border-radius:var(--r)}
+.row{display:flex;align-items:center;gap:6px;padding:5px 6px 5px calc(6px + var(--d)*22px);border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.row:hover{background:var(--acs)}
+.tree{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.tg{border:0;background:none;width:22px;color:var(--mu)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.nm{flex:1;min-width:140px;display:flex;flex-direction:column}
+.nm small{font-size:11px}
+.rp{width:120px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mu)}
+.rp .bar{flex:1}
+.row select{font-size:12px;padding:3px 6px}
+.ra{display:flex}
+.list>div{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}
+.list>div:last-child{border:0}
+.ck{width:18px;height:18px;border:1.5px solid var(--mu);border-radius:5px;background:none;padding:0;font-size:11px;line-height:1;flex:none;color:#fff}
+.ck.on,.chip.dn .ck{background:var(--ok);border-color:var(--ok)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.cal.d1{grid-template-columns:1fr}
+.cell{background:var(--card);min-height:96px;padding:4px;min-width:0}
+.cal.d1 .cell{min-height:200px}
+.cell.oth{background:var(--bg)}
+.cell.today .dn{background:var(--ac);color:#fff}
+.cell.over{outline:2px dashed var(--ac);outline-offset:-2px}
+.ch{display:flex;justify-content:space-between;font-size:11px;color:var(--mu)}
+.dn{border:0;background:none;border-radius:6px;min-width:22px;height:22px;font-size:12px}
+.hd{background:var(--card);text-align:center;font-size:11px;color:var(--mu);padding:4px}
+.chip{display:flex;gap:4px;align-items:center;font-size:11px;border-left:3px solid var(--c);background:color-mix(in srgb,var(--c) 14%,var(--card));border-radius:5px;padding:2px 4px;margin-top:2px;cursor:grab;overflow:hidden}
+.chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.chip .ck{width:13px;height:13px;font-size:9px}
+.chip.dn span{text-decoration:line-through;opacity:.6}
+.chip.od{background:color-mix(in srgb,var(--dg) 18%,var(--card));border-left-color:var(--dg)}
+.chip.dl{cursor:default;font-weight:600}
+.more{border:0;background:none;color:var(--ac);font-size:11px;padding:2px}
+.ar{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.ar .an{flex:1;min-width:150px}
+.sc{list-style:none;margin:0;padding-left:18px}
+.sc.top{padding:0;max-height:200px;overflow:auto;border:1px solid var(--bd);border-radius:8px;padding:6px 8px}
+#pv{max-height:150px;overflow:auto;font-size:12px;background:var(--bg);border-radius:8px;padding:8px;margin-top:8px}
+dialog{border:1px solid var(--bd);border-radius:14px;padding:20px;width:min(520px,94vw);background:var(--card);color:var(--tx);max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+.f{display:block;margin-bottom:10px}
+.f>span{display:block;font-size:12px;color:var(--mu);margin-bottom:3px}
+.f input:not([type=checkbox]),.f select{width:100%}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ft{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+details summary{cursor:pointer;color:var(--ac);margin:6px 0}
+#toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:var(--tx);color:var(--bg);padding:9px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:99}
+#toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#toast button{background:none;border:0;color:inherit;text-decoration:underline;margin-left:8px}
+svg.ln{width:100%;height:150px;background:var(--bg);border-radius:8px}
+.bq{width:100%;border-collapse:collapse;font-size:13px}
+.bq th{font-size:11px;font-weight:600;color:var(--mu);text-align:left;padding:4px 8px;white-space:nowrap}
+.bq td{padding:6px 8px;border-top:1px solid var(--bd);white-space:nowrap}
+.bq td:nth-child(2){white-space:normal;min-width:190px}
+.bq tr.dim td{color:var(--mu)}
+.fb{display:flex;align-items:center;gap:6px;width:150px}
+.fb .bar{flex:1}
+.tbl{overflow-x:auto}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:6px 28px}
+.pp{display:flex;gap:14px;font-size:12px;color:var(--mu);margin-bottom:6px}
+.pill.ok{color:var(--ok);border-color:var(--ok)}
+@media(max-width:760px){
+#side{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:4px;z-index:20;border-top:1px solid var(--bd);border-right:0;overflow-x:auto}
+.brand{display:none}
+.nv{flex:1;text-align:center;font-size:12px;padding:8px 4px}
+.gear{margin:0}.gear span{display:none}
+main{padding:14px 12px 80px}
+.cell{min-height:64px}
+.chip span{font-size:10px}
+.rp{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<nav id="side" aria-label="Main"></nav>
+<main><header class="top"><h1 id="title"></h1><div id="acts" class="acts"></div></header><div id="view"></div></main>
+</div>
+<dialog id="dlg"></dialog>
+<div id="toast" role="status"></div>
+<input type="file" id="imp" accept=".json,application/json" hidden>
+<script>
+'use strict';
+/* ---------- constants & helpers ---------- */
+const K='syllabus-tracker-v1',TY=['subject','paper','chapter','topic'];
+const ST={not_started:'Not started',ongoing:'Ongoing',completed:'Completed',skipped:'Skipped'};
+const SC={not_started:'#a3a9b5',ongoing:'#d69a2d',completed:'#2f7d5b',skipped:'#7a8bb5'};
+const PT={full:'Full syllabus',revision:'Revision',partial:'Partial',custom:'Custom'};
+const NAV=[['dashboard','Dashboard','ড্যাশবোর্ড'],['syllabus','Syllabus','সিলেবাস'],['planner','Planner','পরিকল্পনা'],['calendar','Calendar','ক্যালেন্ডার'],['analytics','Analytics','বিশ্লেষণ'],['board','Board question analysis','বোর্ড প্রশ্ন বিশ্লেষণ']];
+const PAL=['#2b4c7e','#c0623a','#2f7d5b','#a34f8f','#b08d1e','#3a8c9c','#7a5cc2','#c24f5e'];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>iso(new Date());
+const pd=s=>new Date(s+'T00:00');
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return iso(d)};
+const diff=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const L=()=>S&&S.settings&&S.settings.lang==='bn'?'bn-BD':'en';
+const fmt=s=>pd(s).toLocaleDateString(L(),{day:'numeric',month:'short'});
+const fmtW=s=>pd(s).toLocaleDateString(L(),{weekday:'short',day:'numeric',month:'short'});
+const uid=()=>Math.random().toString(36).slice(2,10);
+const byDate=(a,b)=>a.date<b.date?-1:a.date>b.date?1:0;
+const PRI={high:0,med:1,low:2};
+
+/* ---------- state ---------- */
+const blank=()=>({items:[],plans:[],asg:[],revs:[],board:[],settings:{boardCover:80,name:'',exam:'',examDate:'',theme:'light',lang:'en',calc:'excl',perDay:0,restFri:false,lastBackup:0}});
+function norm(o){
+  if(!o||typeof o!=='object'||!Array.isArray(o.items))return null;
+  const b=blank(),s={...b,...o,settings:{...b.settings,...(o.settings||{})}};
+  ['plans','asg','revs'].forEach(k=>{if(!Array.isArray(s[k]))s[k]=[]});
+  s.items=s.items.filter(i=>i&&i.id&&typeof i.name==='string'&&TY.includes(i.type));
+  const ids=new Set(s.items.map(i=>i.id));
+  s.items.forEach((i,n)=>{if(!ST[i.status])i.status='not_started';if(!ids.has(i.parentId))i.parentId='';if(typeof i.order!=='number')i.order=n;if(!ST[i.manual])i.manual=null});
+  s.plans=s.plans.filter(p=>p&&p.id&&p.start&&p.deadline);
+  s.plans.forEach(p=>{p.selectedItemIds=(p.selectedItemIds||[]).filter(x=>ids.has(x))});
+  const pids=new Set(s.plans.map(p=>p.id));
+  s.asg=s.asg.filter(a=>a&&ids.has(a.itemId)&&pids.has(a.planId)&&a.date);
+  s.revs=s.revs.filter(r=>r&&ids.has(r.itemId));
+  s.board=Array.isArray(s.board)?s.board.filter(r=>r&&ids.has(r.itemId)&&Array.isArray(r.sets)).map(r=>({...r,sets:r.sets.map(x=>Array.isArray(x)?x.map(Number).filter(Number.isInteger):[]).filter(x=>x.length)})):[];
+  return s;
+}
+let S;try{S=norm(JSON.parse(localStorage.getItem(K)))||blank()}catch(e){S=blank()}
+let route=location.hash.slice(1)||'dashboard',M,C,LC,ORD,RC,q='',flt='',openP=new Set();
+let exp=new Set();try{exp=new Set(JSON.parse(localStorage.getItem(K+'-x')||'[]'))}catch(e){}
+const cal={view:'month',date:today(),plan:'',subj:'',by:'subject'};
+let an={sel:''};
+
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){toast('Could not save — browser storage is full or blocked.')}}
+function mut(fn,msg){const snap=JSON.stringify(S);fn();save();render();if(msg)toast(msg,snap)}
+function toast(m,snap){const t=$('#toast');t.innerHTML=esc(m)+(snap?'<button data-a="undo">Undo</button>':'');t._s=snap;tr(t);t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),5500)}
+
+/* ---------- index & progress ---------- */
+function idx(){
+  M=new Map();C={};LC=new Map();ORD=new Map();RC={};
+  S.items.forEach(i=>M.set(i.id,i));
+  S.items.forEach(i=>{const p=M.has(i.parentId)?i.parentId:'';(C[p]=C[p]||[]).push(i)});
+  Object.values(C).forEach(a=>a.sort((x,y)=>x.order-y.order));
+  let n=0;(function w(p){(C[p]||[]).forEach(i=>{ORD.set(i.id,n++);w(i.id)})})('');
+  S.revs.forEach(r=>RC[r.itemId]=(RC[r.itemId]||0)+1);
+}
+const kids=id=>C[id]||[];
+const roots=()=>kids('');
+function lv(id){if(LC.has(id))return LC.get(id);const k=kids(id),r=k.length?k.flatMap(c=>lv(c.id)):[M.get(id)];LC.set(id,r);return r}
+const allLv=()=>roots().flatMap(r=>lv(r.id));
+function cnt(ls){const c={completed:0,ongoing:0,skipped:0,not_started:0,total:ls.length};ls.forEach(l=>c[l.status]++);return c}
+const pc=(c,m)=>c.total?Math.round((c.completed+(m==='incl'?c.skipped:0))/c.total*100):0;
+const prog=id=>pc(cnt(lv(id)),S.settings.calc);
+function dstat(it){
+  if(!kids(it.id).length)return it.status;
+  if(it.manual)return it.manual;
+  const c=cnt(lv(it.id));
+  return c.not_started===c.total?'not_started':c.skipped===c.total?'skipped':c.completed+c.skipped===c.total?'completed':'ongoing';
+}
+function rootOf(id){let x=M.get(id);while(x&&x.parentId&&M.has(x.parentId))x=M.get(x.parentId);return x?x.id:''}
+const colorOf=id=>{const r=M.get(rootOf(id));return(r&&r.color)||PAL[0]};
+function path(id){const a=[];let x=M.get(id);while(x){a.unshift(x.name);x=M.get(x.parentId)}return a.join(' › ')}
+const plan=id=>S.plans.find(p=>p.id===id);
+const pcol=p=>PAL[S.plans.indexOf(p)%PAL.length];
+const leafIds=ids=>{const s=new Set();ids.forEach(i=>M.get(i)&&lv(i).forEach(l=>s.add(l.id)));return[...s].sort((a,b)=>ORD.get(a)-ORD.get(b))};
+const planLeaves=p=>{const s=new Set(leafIds(p.selectedItemIds));S.asg.forEach(a=>a.planId===p.id&&s.add(a.itemId));return[...s].filter(i=>M.has(i)).map(i=>M.get(i)).filter(l=>!(p.sys&&l.status==='skipped'))};
+
+/* ---------- plan maths ---------- */
+function idone(p,l){
+  if(p.type==='revision')return S.revs.some(r=>r.itemId===l.id&&r.planId===p.id);
+  return l.status==='completed'||(S.settings.calc==='incl'&&l.status==='skipped');
+}
+function adone(a){const p=plan(a.planId),it=M.get(a.itemId);return a.status==='done'||(p&&it&&(idone(p,it)||(p.sys&&it.status==='skipped')))}
+function PS(p){
+  const L=planLeaves(p),A=S.asg.filter(a=>a.planId===p.id),t=today();
+  const tot=L.length,done=L.filter(l=>idone(p,l)).length,rem=tot-done;
+  const over=A.filter(a=>!adone(a)&&a.date<t).length;
+  const from=p.start>t?p.start:t,dl=Math.max(diff(from,p.deadline)+1,1);
+  const dur=Math.max(diff(p.start,p.deadline)+1,1);
+  const exp=A.length?new Set(A.filter(a=>a.date<t).map(a=>a.itemId)).size:Math.round(tot*Math.min(1,Math.max(0,diff(p.start,t)/dur)));
+  let label,k='';
+  if(!tot){label='No items'}else if(!rem){label='Complete';k='ok'}else if(t>p.deadline){label='Overdue';k='bad'}else if(t<p.start){label='Not started'}else if(done>=exp&&!over){label='On track';k='ok'}else{label='Behind';k='bad'}
+  return{tot,done,rem,over,exp,label,k,pct:tot?Math.round(done/tot*100):0,pace:rem?(Math.ceil(rem/dl*10)/10):0};
+}
+function sched(ids,start,end,perDay,restFri){
+  let days=[];if(end<start||diff(start,end)>3650)return{out:[],days,warn:'Deadline must fall on or after the start date.'};
+  for(let d=start;d<=end;d=addD(d,1))days.push(d);
+  if(restFri){const w=days.filter(d=>pd(d).getDay()!==5);if(w.length)days=w}
+  const n=ids.length,out=[];let warn='';
+  ids.forEach((id,i)=>{
+    let k=perDay>0?Math.floor(i/perDay):Math.floor(i*days.length/n);
+    if(k>=days.length){k=days.length-1;warn='The daily target is too low to finish by the deadline — extra items land on the last day.'}
+    out.push({itemId:id,date:days[k]});
+  });
+  return{out,days,warn};
+}
+function makePlan(o){
+  const p={id:uid(),name:o.name,type:o.type,desc:o.desc||'',start:o.start,deadline:o.deadline,selectedItemIds:o.ids,mode:o.mode,perDay:o.perDay||0,restFri:!!o.restFri,createdAt:Date.now(),updatedAt:Date.now()};
+  if(o.s)p.s=1;
+  if(o.sys)p.sys=o.sys;
+  S.plans.push(p);
+  if(o.mode!=='manual')sched(leafIds(o.ids),o.start,o.deadline,p.perDay,p.restFri).out.forEach(x=>S.asg.push({id:uid(),planId:p.id,itemId:x.itemId,date:x.date,status:'pending',priority:'med',dur:0}));
+  return p;
+}
+function purge(set){
+  S.items=S.items.filter(i=>!set.has(i.id));
+  S.asg=S.asg.filter(a=>!set.has(a.itemId));
+  S.revs=S.revs.filter(r=>!set.has(r.itemId));
+  S.board=(S.board||[]).filter(r=>!set.has(r.itemId));
+  S.plans.forEach(p=>p.selectedItemIds=p.selectedItemIds.filter(x=>!set.has(x)));
+}
+const descIds=id=>{const s=new Set([id]);(function w(i){kids(i).forEach(k=>{s.add(k.id);w(k.id)})})(id);return s};
+
+/* ---------- small ui parts ---------- */
+const empty=(t,d,b)=>`<div class="empty"><h3>${t}</h3><p class="mu">${d}</p>${b}</div>`;
+const bar=(p,c)=>`<div class="bar"><i style="width:${p}%;background:${c}"></i></div>`;
+function bar2(c,col){const t=c.total||1;return`<div class="bar"><i style="width:${c.completed/t*100}%;background:${col}"></i><i class="sk" style="width:${c.skipped/t*100}%;background:${col}"></i></div>`}
+const seg=()=>`<span class="seg" role="group" aria-label="Progress calculation"><button data-a="calc" data-v="excl" class="${S.settings.calc==='excl'?'on':''}">Excl. skipped</button><button data-a="calc" data-v="incl" class="${S.settings.calc==='incl'?'on':''}">Incl. skipped</button></span>`;
+const ckb=a=>`<button class="ck${adone(a)?' on':''}" data-a="asgtog" data-id="${a.id}" aria-label="Mark done">${adone(a)?'✓':''}</button>`;
+
+/* ---------- dialogs ---------- */
+function dlg(title,body,ok,onSave,extra){
+  const d=$('#dlg');d._re=true;
+  d.innerHTML=`<form onsubmit="return false"><h2>${title}</h2>${body}<div class="ft">${extra||''}<span class="sp"></span><button type="button" class="btn2" data-a="close">${ok?'Cancel':'Close'}</button>${ok?`<button type="button" class="btn" data-a="save">${ok}</button>`:''}</div></form>`;
+  d._f=onSave;tr(d);if(!d.open)d.showModal();
+  const i=d.querySelector('[autofocus]');if(i)i.focus();
+}
+/* Forms can be blocked in sandboxed previews, so saving never relies on native form submission. */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter'||e.target.tagName!=='INPUT'||!e.target.closest('#dlg form'))return;
+  const d=$('#dlg');if(!d._f)return;e.preventDefault();A.save();
+});
+function ask(text,label,fn){dlg('Please confirm',`<p>${text}</p>`,label,()=>{fn()})}
+const fld=(l,h)=>`<label class="f"><span>${l}</span>${h}</label>`;
+const opts=(o,v)=>Object.entries(o).map(([k,l])=>`<option value="${k}"${k===v?' selected':''}>${l}</option>`).join('');
+
+function openItem(id,par){
+  const it=id?M.get(id):null,pa=it?it.parentId:(par||''),pt=pa?M.get(pa).type:null;
+  let lo=pt?TY.indexOf(pt)+1:0,hi=3;
+  if(it&&kids(id).length)hi=Math.min(...kids(id).map(k=>TY.indexOf(k.type)))-1;
+  const ty=pt?TY.slice(lo,hi+1):[it?it.type:'subject'];
+  if(!ty.length)return toast('This item cannot be placed at any level.');
+  const def=it?it.type:ty[0],col=it&&it.color||PAL[roots().length%PAL.length];
+  dlg(it?'Edit item':(pt?'Add '+def+' to '+esc(M.get(pa).name):'Add subject'),
+    fld('Name',`<input name="name" required autofocus value="${esc(it?it.name:'')}">`)+
+    (ty.length>1?fld('Level',`<select name="type">${ty.map(t=>`<option value="${t}"${t===def?' selected':''}>${t}</option>`).join('')}</select>`):`<input type="hidden" name="type" value="${def}">`)+
+    `<details${it&&(it.notes||it.difficulty)?' open':''}><summary>More options</summary>${fld('Notes',`<textarea name="notes">${esc(it?it.notes:'')}</textarea>`)}<div class="f2">${fld('Difficulty',`<select name="diff">${opts({'':'—',Easy:'Easy',Medium:'Medium',Hard:'Hard'},it?it.difficulty:'')}</select>`)}${fld('Colour (subjects)',`<input type="color" name="color" value="${col}">`)}</div></details>`,
+    'Save',d=>{
+      const n=d.get('name').trim();if(!n)return false;
+      if(pa)exp.add(pa);
+      mut(()=>{
+        const t=d.get('type'),o={name:n,type:t,notes:d.get('notes')||'',difficulty:d.get('diff')||'',color:t==='subject'?d.get('color'):'',updatedAt:Date.now()};
+        if(it)Object.assign(it,o);
+        else S.items.push({id:uid(),parentId:pa,order:kids(pa).length,status:'not_started',manual:null,createdAt:Date.now(),completedAt:null,...o});
+      },it?'Saved':'Added');
+    });
+}
+function openRev(id){
+  const it=M.get(id),rs=S.revs.filter(r=>r.itemId===id).sort((a,b)=>a.date<b.date?1:-1);
+  dlg('Revisions · '+esc(it.name),
+    `<div class="list">${rs.length?rs.map((r,i)=>`<div><b>#${rs.length-i}</b><span>${fmt(r.date)}${r.planId&&plan(r.planId)?' · '+esc(plan(r.planId).name):''}${r.notes?' — '+esc(r.notes):''}</span><span class="sp"></span><button type="button" class="ib x" data-a="delrev" data-id="${r.id}" aria-label="Delete revision">✕</button></div>`).join(''):'<p class="mu">No revisions yet. Completion status is not affected by revisions.</p>'}</div><h3 style="margin-top:14px">Record a revision</h3><div class="f2">${fld('Date',`<input type="date" name="date" value="${today()}" required>`)}${fld('Notes (optional)','<input name="notes" autofocus>')}</div>`,
+    'Add revision',d=>{mut(()=>S.revs.push({id:uid(),itemId:id,planId:null,date:d.get('date'),notes:d.get('notes')||'',createdAt:Date.now()}),'');toast('Revision recorded');setTimeout(()=>openRev(id));return false});
+}
+function scope(pid){return`<ul class="sc${pid?'':' top'}">${kids(pid).map(i=>`<li><label><input type="checkbox" data-c="chk" value="${i.id}"> ${esc(i.name)}</label>${kids(i.id).length?scope(i.id):''}</li>`).join('')}</ul>`}
+function getScope(f){
+  const on=[...f.querySelectorAll('.sc input:checked')];
+  return on.filter(cb=>{const up=cb.closest('li').parentElement.closest('li');return!(up&&up.querySelector(':scope>label input').checked)}).map(cb=>cb.value);
+}
+function pv(){pv0();const o=$('#pv');if(o)tr(o)}
+function pv0(){
+  const f=$('#dlg form'),o=$('#pv');if(!o)return;
+  const g=n=>f.elements[n],ids=f.dataset.rem?remainingLeaves().map(l=>l.id):leafIds(getScope(f));
+  if(g('mode').value==='manual'){o.innerHTML='Manual: after creating the plan, add tasks with specific dates from the plan card or the calendar.';return}
+  if(!ids.length){o.textContent='Select syllabus scope to preview the schedule.';return}
+  const r=sched(ids,g('start').value,g('deadline').value,+g('perDay').value||0,g('restFri').checked);
+  const by={};r.out.forEach(x=>(by[x.date]=by[x.date]||[]).push(M.get(x.itemId).name));
+  const ks=Object.keys(by);
+  o.innerHTML=`<b>${ids.length} items over ${ks.length} study days</b>${r.warn?`<div class="bad">${r.warn}</div>`:''}`+ks.slice(0,25).map(k=>`<div><b>${fmtW(k)}</b> ${by[k].map(esc).join(', ')}</div>`).join('')+(ks.length>25?`<div class="mu">… and ${ks.length-25} more days</div>`:'');
+}
+function openPlan(id){
+  const p=id&&plan(id),t=today(),s=S.settings;
+  if(!p&&!S.items.length)return toast('Add some syllabus items first.');
+  dlg(p?'Edit plan':'New study plan',
+    fld('Plan name',`<input name="name" required autofocus value="${esc(p?p.name:'')}">`)+
+    `<div class="f2">${fld('Type',`<select name="type">${opts(PT,p?p.type:'full')}</select>`)}${p?'':fld('Scheduling',`<select name="mode">${opts({auto:'Automatic',manual:'Manual',hybrid:'Hybrid (auto, then edit)'},'auto')}</select>`)}</div>`+
+    `<div class="f2">${fld('Start',`<input type="date" name="start" required value="${p?p.start:t}">`)}${fld('Deadline',`<input type="date" name="deadline" required value="${p?p.deadline:addD(t,30)}">`)}</div>`+
+    (p?'':`<div class="f2">${fld('Daily target (items, optional)',`<input type="number" min="0" name="perDay" value="${s.perDay||''}">`)}${fld('Rest on Fridays','<input type="checkbox" name="restFri"'+(s.restFri?' checked':'')+'>')}</div><div class="f"><span>Scope</span><label><input type="checkbox" data-c="all"> Entire syllabus</label>${scope('')}</div><div id="pv" class="mu"></div>`)+
+    `<details${p&&p.desc?' open':''}><summary>Description</summary><textarea name="desc">${esc(p?p.desc:'')}</textarea></details>`,
+    p?'Save':'Create plan',(d,f)=>{
+      const o={name:d.get('name').trim(),type:d.get('type'),start:d.get('start'),deadline:d.get('deadline'),desc:d.get('desc')||''};
+      if(o.deadline<o.start){toast('Deadline must be on or after the start date.');return false}
+      if(p){mut(()=>Object.assign(p,o,{updatedAt:Date.now()}),'Plan updated');return}
+      const ids=getScope(f);if(!ids.length){toast('Select at least one subject, paper, chapter or topic.');return false}
+      Object.assign(o,{ids,mode:d.get('mode'),perDay:+d.get('perDay')||0,restFri:!!d.get('restFri')});
+      mut(()=>{const np=makePlan(o);openP.add(np.id)},'Plan created');route='planner';location.hash='planner';render();
+    });
+  if(!p)pv();
+}
+function openAsg(id,pid,date){
+  const a=id&&S.asg.find(x=>x.id===id);
+  if(!S.plans.length)return toast('Create a study plan first.');
+  const P=a?a.planId:(pid||cal.plan||S.plans[0].id);
+  dlg(a?'Edit task':'Add task',
+    fld('Plan',`<select name="plan" data-c="asgplan">${S.plans.map(p=>`<option value="${p.id}"${p.id===P?' selected':''}>${esc(p.name)}</option>`).join('')}</select>`)+
+    fld('Syllabus item',`<select name="item" id="asgitem" required></select>`)+
+    `<div class="f2">${fld('Date',`<input type="date" name="date" required value="${a?a.date:(date||today())}">`)}${fld('Priority',`<select name="pri">${opts({high:'High',med:'Medium',low:'Low'},a?a.priority:'med')}</select>`)}</div>`+
+    fld('Estimated minutes (optional)',`<input type="number" min="0" name="dur" value="${a&&a.dur||''}">`),
+    'Save',d=>{
+      const it=d.get('item');if(!it)return false;
+      mut(()=>{
+        const o={planId:d.get('plan'),itemId:it,date:d.get('date'),priority:d.get('pri'),dur:+d.get('dur')||0};
+        if(a)Object.assign(a,o);else S.asg.push({id:uid(),status:'pending',...o});
+      },a?'Task updated':'Task added');
+    },a?`<button type="button" class="btn2 bad" data-a="delasg" data-id="${a.id}">Delete</button>`:'');
+  fillItems(a&&a.itemId);
+}
+function fillItems(sel){
+  const f=$('#dlg form'),p=plan(f.elements.plan.value),o=$('#asgitem');if(!p||!o)return;
+  const inP=new Set(planLeaves(p).map(l=>l.id)),all=allLv();
+  const op=l=>`<option value="${l.id}"${l.id===sel?' selected':''}>${esc(path(l.id))}</option>`;
+  o.innerHTML=`<optgroup label="In this plan">${all.filter(l=>inP.has(l.id)).map(op).join('')}</optgroup><optgroup label="Other items">${all.filter(l=>!inP.has(l.id)).map(op).join('')}</optgroup>`;tr(o);
+}
+function openSettings(){
+  const s=S.settings;
+  dlg('Settings',
+    `<div class="f2">${fld('Your name (optional)',`<input name="name" value="${esc(s.name)}">`)}${fld('Exam name',`<input name="exam" value="${esc(s.exam)}">`)}</div>`+
+    `<div class="f2">${fld('Exam date',`<input type="date" name="examDate" value="${s.examDate}">`)}${fld('Theme',`<select name="theme">${opts({light:'Light',dark:'Dark'},s.theme)}</select>`)}</div>`+
+    `<div class="f2">${fld('Language',`<select name="lang">${opts({en:'English',bn:'বাংলা'},s.lang)}</select>`)}${fld('Progress calculation',`<select name="calc">${opts({excl:'Excluding skipped',incl:'Including skipped'},s.calc)}</select>`)}</div>`+
+    `<div class="f2">${fld('Default daily target',`<input type="number" min="0" name="perDay" value="${s.perDay||''}">`)}${fld('Rest on Fridays by default','<input type="checkbox" name="restFri"'+(s.restFri?' checked':'')+'>')}</div>`+
+    `<h3>Data</h3><div class="acts"><button type="button" class="btn2" data-a="export">Export JSON</button><button type="button" class="btn2" data-a="import">Import JSON</button><button type="button" class="btn2" data-a="defaults">Load default syllabus</button><button type="button" class="btn2" data-a="sample">Load sample</button>${S.items.some(i=>i.s)?'<button type="button" class="btn2" data-a="rmsample">Remove sample</button>':''}<button type="button" class="btn2 bad" data-a="reset">Erase all</button></div><p class="mu">Last backup: ${s.lastBackup?new Date(s.lastBackup).toLocaleString():'never'}. Data lives in this browser only — export a backup regularly.</p>`,
+    'Save',d=>{mut(()=>{Object.assign(S.settings,{name:d.get('name').trim(),exam:d.get('exam').trim(),examDate:d.get('examDate'),theme:d.get('theme'),lang:d.get('lang'),calc:d.get('calc'),perDay:+d.get('perDay')||0,restFri:!!d.get('restFri')})});toast('Settings saved')});
+}
+
+/* ---------- views ---------- */
+const V={};
+const ACTS={
+  dashboard:()=>S.items.length?'<button class="btn2" data-a="addsub">Add subject</button><button class="btn2" data-a="nav" data-v="syllabus">Update progress</button><button class="btn" data-a="newplan">Create plan</button>':'',
+  syllabus:()=>'<button class="btn" data-a="addsub">Add subject</button>',
+  planner:()=>'<button class="btn" data-a="newplan">New plan</button>',
+  calendar:()=>'<button class="btn" data-a="addday" data-d="'+cal.date+'">Add task</button>',
+  analytics:()=>seg(),
+  board:()=>'<button class="btn" data-a="addbq">Add analysis</button>'
+};
+function taskRow(a){const it=M.get(a.itemId),p=plan(a.planId);return`<div>${ckb(a)}<span style="flex:1"><span style="${adone(a)?'text-decoration:line-through;opacity:.6':''}">${p.type==='revision'?'↻ ':''}${esc(it.name)}</span><br><small>${esc(p.name)}${a.date<today()&&!adone(a)?' · <b class="bad">overdue</b>':''}</small></span></div>`}
+V.dashboard=()=>{
+  if(!S.items.length)return empty('Start with your syllabus','Add your first subject, or load a small sample to see how everything fits together.','<button class="btn" data-a="addsub">Add a subject</button> <button class="btn2" data-a="defaults">Load default syllabus</button> <button class="btn2" data-a="sample">Load sample</button>');
+  const c=cnt(allLv()),m=S.settings.calc,t=today(),p=pc(c,m),o=pc(c,m==='incl'?'excl':'incl');
+  const ps=S.plans.map(p=>({p,s:PS(p)})),act=ps.filter(x=>x.s.rem>0&&x.s.tot);
+  const td=S.asg.filter(a=>a.date===t),rv=S.asg.filter(a=>a.date>=t&&plan(a.planId).type==='revision'&&!adone(a)).sort(byDate).slice(0,5);
+  const dls=act.filter(x=>x.p.deadline>=t).sort((a,b)=>a.p.deadline<b.p.deadline?-1:1).slice(0,4);
+  const ex=S.settings.examDate&&diff(t,S.settings.examDate)>=0?`<p class="mu">Days to ${esc(S.settings.exam||'exam')}: <b>${diff(t,S.settings.examDate)}</b> (${fmt(S.settings.examDate)})</p>`:'';
+  const week=[...Array(7)].map((_,i)=>{const d=addD(t,i),n=S.asg.filter(a=>a.date===d).length;return`<button class="btn2" data-a="goday" data-d="${d}">${fmtW(d)} · ${n}</button>`}).join('');
+  const planCards=act.map(x=>{
+    const pl=x.p,s=x.s,col=pcol(pl),g=new Map();
+    planLeaves(pl).forEach(l=>{const r=rootOf(l.id);if(!g.has(r))g.set(r,{tot:0,done:0,sk:0});const e=g.get(r);e.tot++;if(idone(pl,l))e.done++;else if(pl.type!=='revision'&&l.status==='skipped')e.sk++});
+    const subs=[...g.entries()].filter(([r])=>M.has(r)).sort((a,b)=>ORD.get(a[0])-ORD.get(b[0])).map(([r,e])=>{const sp=e.tot?Math.round(e.done/e.tot*100):0;return`<div><div class="lr" style="margin-bottom:2px"><b>${esc(M.get(r).name)} <small>${e.done}/${e.tot}${e.sk?' · '+e.sk+' skipped':''}</small></b><span class="mu">${sp}%</span>${bar(sp,colorOf(r))}</div></div>`}).join('');
+    return`<section class="card" style="grid-column:1/-1"><h3>${esc(pl.name)} <i class="pill st-${s.k}">${s.label}</i><i class="pill">${esc(PT[pl.type]||pl.type)}</i></h3><div class="mu" style="margin-bottom:10px">${fmt(pl.start)} – ${fmt(pl.deadline)}</div><div class="flex"><div class="ring" style="--p:${s.pct};--ac:${col}"><span>${s.pct}%</span></div><div><div class="mu">${s.done} of ${s.tot} items done</div><div class="cnts"><div><b>${s.done}</b>Done</div><div><b>${s.rem}</b>Remaining</div><div><b>${s.over}</b>Overdue</div></div></div></div><h3 style="margin-top:14px">Subject-wise progress</h3><div class="sg">${subs}</div></section>`;
+  }).join('');
+  return`<div class="grid">
+  <section class="card"><div class="flex"><div class="ring" style="--p:${p}"><span>${p}%</span></div><div><h3>${S.settings.name?'Hi '+esc(S.settings.name)+' — overall':'Overall progress'}</h3><div class="mu">${m==='incl'?'Skipped counted as done':'Skipped not counted'}. ${m==='incl'?'Excluding':'Including'} skipped: <b>${o}%</b></div>${ex}${seg()}</div></div>
+  <div class="mu" style="margin-top:10px">${c.completed} of ${c.total} items completed</div><div class="cnts"><div><b>${c.completed}</b>Completed</div><div><b>${c.ongoing}</b>Ongoing</div><div><b>${c.skipped}</b>Skipped</div><div><b>${c.not_started}</b>Not started</div></div></section>
+  <section class="card" style="grid-column:1/-1"><h3>Subject-wise progress</h3><div class="sg">${roots().map(r=>{const k=cnt(lv(r.id)),pp=kids(r.id).filter(x=>x.type==='paper'&&kids(x.id).length);return`<div><div class="lr" style="margin-bottom:2px"><b>${esc(r.name)} <small>${k.completed}/${k.total}${k.skipped?' · '+k.skipped+' skipped':''}</small></b><span class="mu">${pc(k,m)}%</span>${bar2(k,colorOf(r.id))}</div>${pp.length>1?`<div class="pp">${pp.map(x=>`<span><span>${esc(x.name)}</span> ${prog(x.id)}%</span>`).join('')}</div>`:''}</div>`}).join('')}</div></section>
+  <section class="card"><h3>Today</h3><div class="list">${td.length?td.map(taskRow).join(''):'<p class="mu">Nothing scheduled today.'+(S.plans.length?'':' Create a plan to get a daily schedule.')+'</p>'}</div></section>
+  <section class="card"><h3>Active plans</h3>${act.length?act.map(x=>`<div class="lr"><b>${esc(x.p.name)} <i class="pill st-${x.s.k}">${x.s.label}</i></b><span class="mu">${x.s.pct}%</span>${bar(x.s.pct,'var(--ac)')}</div>`).join(''):'<p class="mu">No active plans. <button class="more" data-a="newplan">Create one</button></p>'}</section>
+  <section class="card"><h3>Upcoming deadlines</h3><div class="list">${dls.length?dls.map(x=>`<div><span style="flex:1">${esc(x.p.name)}</span><span class="mu">${fmt(x.p.deadline)} · ${diff(t,x.p.deadline)}d · ${x.s.rem} left</span></div>`).join(''):'<p class="mu">No upcoming deadlines.</p>'}</div></section>
+  <section class="card"><h3>Upcoming revisions</h3><div class="list">${rv.length?rv.map(a=>`<div><span style="flex:1">${esc(M.get(a.itemId).name)}</span><span class="mu">${fmt(a.date)}</span></div>`).join(''):'<p class="mu">No revision tasks scheduled.</p>'}</div></section>
+  <section class="card"><h3>Next 7 days</h3><div class="acts">${week}</div></section>${planCards}</div>
+  ${!S.settings.lastBackup||Date.now()-S.settings.lastBackup>12096e5?'<p class="mu">You haven\'t backed up recently. <button class="more" data-a="export">Export backup</button></p>':''}`;
+};
+function row(it,d,all){
+  const k=kids(it.id),open=exp.has(it.id)||q||flt,ds=dstat(it),c=cnt(lv(it.id));
+  const nameHit=q&&it.name.toLowerCase().includes(q.toLowerCase());
+  const sel=k.length?`<option value="auto"${it.manual?'':' selected'}>Auto: ${ST[ds]}</option>`+Object.entries(ST).map(([v,l])=>`<option value="${v}"${it.manual===v?' selected':''}>${l}</option>`).join(''):opts(ST,it.status);
+  let h=`<div class="row" style="--d:${d}"><button class="tg" data-a="tog" data-id="${it.id}" aria-label="Expand or collapse" ${k.length?'':'disabled'}>${k.length?(open?'▾':'▸'):'·'}</button><span class="dot" style="background:${SC[ds]}" title="${ST[ds]}"></span>
+  <div class="nm"><span><b data-a="ren" data-id="${it.id}" title="Double-click to rename">${esc(it.name)}</b>${it.difficulty?`<i class="pill">${it.difficulty}</i>`:''}${RC[it.id]?`<i class="pill" title="Revisions">↻ ${RC[it.id]}</i>`:''}</span><small>${it.type}${it.notes?' · '+esc(it.notes):''}</small></div>
+  ${k.length?`<div class="rp">${bar(prog(it.id),colorOf(it.id))}${prog(it.id)}%</div>`:''}
+  <select data-c="status" data-id="${it.id}" aria-label="Status of ${esc(it.name)}">${sel}</select>${it.manual?'<span title="Manually overridden" aria-label="Manual override">📌</span>':''}
+  <span class="ra">${it.type!=='topic'?`<button class="ib" data-a="addkid" data-id="${it.id}" aria-label="Add child" title="Add child">＋</button>`:''}<button class="ib" data-a="rev" data-id="${it.id}" aria-label="Revisions" title="Revisions">↻</button><button class="ib" data-a="edit" data-id="${it.id}" aria-label="Edit" title="Edit">✎</button><button class="ib" data-a="up" data-id="${it.id}" aria-label="Move up">↑</button><button class="ib" data-a="down" data-id="${it.id}" aria-label="Move down">↓</button><button class="ib x" data-a="del" data-id="${it.id}" aria-label="Delete">✕</button></span></div>`;
+  if(open)k.forEach(ch=>{if(all||nameHit||vis(ch))h+=row(ch,d+1,all||nameHit)});
+  return h;
+}
+const mt=it=>(!q||(it.name+' '+(it.notes||'')).toLowerCase().includes(q.toLowerCase()))&&(!flt||lv(it.id).some(l=>l.status===flt));
+const vis=it=>mt(it)||kids(it.id).some(vis);
+const tree=()=>{const r=roots().filter(vis);return r.length?r.map(i=>row(i,0,false)).join(''):'<p class="mu" style="padding:16px">No matching items.</p>'};
+V.syllabus=()=>!S.items.length?empty('Your syllabus is empty','Add a subject first, then break it into papers, chapters and topics. Levels are optional.','<button class="btn" data-a="addsub">Add your first subject</button> <button class="btn2" data-a="defaults">Load default syllabus</button> <button class="btn2" data-a="sample">Load sample</button>'):
+  `<div class="tb" style="margin-bottom:12px"><input type="search" id="q" placeholder="Search syllabus" aria-label="Search syllabus" value="${esc(q)}"><select id="flt" aria-label="Filter by status"><option value="">All statuses</option>${opts(ST,flt)}</select><button class="btn2" data-a="expall">Expand all</button><button class="btn2" data-a="colall">Collapse all</button></div><div class="tree" id="tree">${tree()}</div>`;
+function asgList(p){
+  const A=S.asg.filter(a=>a.planId===p.id).sort(byDate).slice(0,300);
+  if(!A.length)return`<p class="mu">No tasks yet. ${p.mode==='manual'?'Add tasks with dates to build your schedule.':''} <button class="more" data-a="newasg" data-p="${p.id}">Add a task</button></p>`;
+  return`<div style="margin-top:10px">${A.map(a=>{const others=S.plans.filter(x=>x.id!==p.id&&(x.selectedItemIds.some(i=>descIds(i).has(a.itemId))||S.asg.some(y=>y.planId===x.id&&y.itemId===a.itemId))).map(x=>x.name);
+    return`<div class="ar">${ckb(a)}<input type="date" data-c="asgdate" data-id="${a.id}" value="${a.date}" aria-label="Date"><span class="an">${esc(path(a.itemId))}${others.length?`<br><small>Also in: ${others.map(esc).join(', ')}</small>`:''}${a.date<today()&&!adone(a)?' <b class="bad">overdue</b>':''}</span><select data-c="asgpri" data-id="${a.id}" aria-label="Priority">${opts({high:'High',med:'Medium',low:'Low'},a.priority)}</select><button class="ib x" data-a="delasg" data-id="${a.id}" aria-label="Delete task">✕</button></div>`}).join('')}</div>`;
+}
+V.planner=()=>(S.plans.some(p=>p.sys==='remaining')?'':remCard())+(!S.plans.length?empty('No study plans yet','Create a plan to spread chapters over a timeline, track your pace and see tasks in the calendar.','<button class="btn" data-a="newplan">Create a study plan</button>'):
+  S.plans.map(p=>{const s=PS(p),o=openP.has(p.id);return`<section class="card"><div class="top" style="margin:0 0 8px"><div><h3 style="margin:0">${esc(p.name)} <i class="pill">${PT[p.type]}</i>${p.sys?'<i class="pill">Built-in</i>':''} <i class="pill st-${s.k}">${s.label}</i></h3><small>${fmt(p.start)} → ${fmt(p.deadline)} (${p.mode})</small></div><div class="acts2"><button class="btn2" data-a="toggleP" data-id="${p.id}">${o?'Hide tasks':'Tasks'}</button><button class="btn2" data-a="newasg" data-p="${p.id}">+ Task</button>${s.rem&&S.asg.some(a=>a.planId===p.id)?`<button class="btn2" data-a="spread" data-id="${p.id}" title="Redistribute unfinished tasks from today to the deadline">Reschedule unfinished</button>`:''}${p.sys&&(remNew(p).length||unsched(p).length||S.asg.some(a=>a.planId===p.id&&M.get(a.itemId).status==='skipped'))?`<button class="btn2" data-a="syncrem" data-id="${p.id}" title="Add newly unfinished or un-skipped items and drop skipped ones">Sync remaining</button>`:''}<button class="btn2" data-a="editplan" data-id="${p.id}">Edit</button><button class="btn2" data-a="delplan" data-id="${p.id}">Delete</button></div></div>${p.desc?`<p class="mu">${esc(p.desc)}</p>`:''}${bar(s.pct,'var(--ac)')}<div class="cnts"><div><b>${s.tot}</b>Items</div><div><b>${s.done}</b>Done</div><div><b>${s.rem}</b>Remaining</div><div><b>${s.pct}%</b>Complete</div><div><b>${s.pace}</b>Needed / day</div><div><b class="${s.over?'bad':''}">${s.over}</b>Overdue</div></div>${o?asgList(p):''}</section>`}).join(''));
+V.calendar=()=>{
+  const v=cal.view,t=today(),d=pd(cal.date);let s,e,title;
+  if(v==='month'){const f=new Date(d.getFullYear(),d.getMonth(),1);s=addD(iso(f),-((f.getDay()+6)%7));e=addD(s,41);title=d.toLocaleDateString(L(),{month:'long',year:'numeric'})}
+  else if(v==='week'){s=addD(cal.date,-((d.getDay()+6)%7));e=addD(s,6);title=fmt(s)+' – '+fmt(e)}
+  else{s=e=cal.date;title=d.toLocaleDateString(L(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+  const ev={},dl={};
+  S.asg.forEach(a=>{if(a.date<s||a.date>e||(cal.plan&&a.planId!==cal.plan)||(cal.subj&&rootOf(a.itemId)!==cal.subj))return;(ev[a.date]=ev[a.date]||[]).push(a)});
+  S.plans.forEach(p=>{if(p.deadline>=s&&p.deadline<=e&&(!cal.plan||p.id===cal.plan))(dl[p.deadline]=dl[p.deadline]||[]).push(p)});
+  const chip=(a,full)=>{const p=plan(a.planId),it=M.get(a.itemId),dn=adone(a),od=!dn&&a.date<t,col=cal.by==='plan'?pcol(p):colorOf(it.id);
+    return`<div class="chip${dn?' dn':''}${od?' od':''}" draggable="true" data-id="${a.id}" data-a="asged" style="--c:${col}" title="${esc(p.name+' · '+path(it.id))}">${ckb(a)}<span>${p.type==='revision'?'↻ ':''}${esc(full?path(it.id):it.name)}${full?' · '+esc(p.name):''}</span></div>`};
+  const cell=day=>{
+    const l=(ev[day]||[]).sort((a,b)=>PRI[a.priority]-PRI[b.priority]),mx=v==='month'?3:99;
+    return`<div class="cell${day===t?' today':''}${v==='month'&&day.slice(0,7)!==cal.date.slice(0,7)?' oth':''}" data-day="${day}"><div class="ch"><button class="dn" data-a="addday" data-d="${day}" aria-label="Add task on ${day}">${+day.slice(8)}</button></div>${(dl[day]||[]).map(p=>`<div class="chip dl" style="--c:${pcol(p)}"><span>⚑ ${esc(p.name)}</span></div>`).join('')}${l.slice(0,mx).map(a=>chip(a,v==='day')).join('')}${l.length>mx?`<button class="more" data-a="goday" data-d="${day}">+${l.length-mx} more</button>`:''}</div>`;
+  };
+  const days=[];for(let x=s;x<=e;x=addD(x,1))days.push(x);
+  return`<div class="tb" style="margin-bottom:12px"><button class="btn2" data-a="cnav" data-v="-1" aria-label="Previous">‹</button><button class="btn2" data-a="cnav" data-v="0">Today</button><button class="btn2" data-a="cnav" data-v="1" aria-label="Next">›</button><b style="min-width:160px">${title}</b><span class="seg">${['month','week','day'].map(x=>`<button data-a="cview" data-v="${x}" class="${v===x?'on':''}">${x[0].toUpperCase()+x.slice(1)}</button>`).join('')}</span><select data-c="cplan" aria-label="Filter by plan"><option value="">All plans</option>${S.plans.map(p=>`<option value="${p.id}"${cal.plan===p.id?' selected':''}>${esc(p.name)}</option>`).join('')}</select><select data-c="csubj" aria-label="Filter by subject"><option value="">All subjects</option>${roots().map(r=>`<option value="${r.id}"${cal.subj===r.id?' selected':''}>${esc(r.name)}</option>`).join('')}</select><select data-c="cby" aria-label="Colour by"><option value="subject">Colour by subject</option><option value="plan"${cal.by==='plan'?' selected':''}>Colour by plan</option></select></div>
+  <div class="cal${v==='day'?' d1':''}">${v==='day'?'':['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<div class="hd">${x}</div>`).join('')}${days.map(cell).join('')}</div>${S.plans.length?'':'<p class="mu">No plans yet — create one in the Planner, or add tasks after creating a plan. Drag tasks between days to reschedule.</p>'}`;
+};
+const barRows=(items,mode)=>items.map(i=>{const c=cnt(lv(i.id));return`<div class="lr"><b>${esc(i.name)} <small>${c.completed}/${c.total}${c.skipped?' · '+c.skipped+' skipped':''}</small></b><span class="mu">${pc(c,S.settings.calc)}%</span>${bar2(c,colorOf(i.id))}</div>`}).join('');
+function timeline(){
+  const L=allLv(),pts=L.filter(l=>l.status==='completed'&&l.completedAt).map(l=>l.completedAt.slice(0,10)).sort();
+  if(pts.length<2||!L.length)return'<p class="mu">Complete items on a few different days to see your progress curve.</p>';
+  const d0=pts[0],d1=today()>pts[pts.length-1]?today():pts[pts.length-1],sp=Math.max(diff(d0,d1),1);
+  const xy=[[0,100]];pts.forEach((d,n)=>xy.push([diff(d0,d)/sp*100,100-(n+1)/L.length*100]));xy.push([100,xy[xy.length-1][1]]);
+  return`<svg class="ln" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Completed items over time"><polyline fill="none" stroke="var(--ac)" stroke-width="2" vector-effect="non-scaling-stroke" points="${xy.map(p=>p.join(',')).join(' ')}"/></svg><div class="ch"><span>${fmt(d0)}</span><span>${pts.length} of ${L.length} items completed</span><span>${fmt(d1)}</span></div>`;
+}
+V.analytics=()=>{
+  if(!S.items.length)return empty('No data to analyse yet','Add syllabus items and update their status to see progress here.','<button class="btn" data-a="addsub">Add a subject</button>');
+  const L=allLv(),c=cnt(L),m=S.settings.calc,t=today();
+  const sel=an.sel&&M.get(an.sel)?an.sel:roots()[0].id,sub=M.get(sel);
+  const rv=S.revs.slice().sort((a,b)=>a.date<b.date?1:-1);
+  const revBy=roots().map(r=>{const ids=new Set(lv(r.id).map(l=>l.id)),all=descIds(r.id);const n=S.revs.filter(x=>all.has(x.itemId)).length,done=[...ids].filter(i=>RC[i]).length;return{r,n,pct:ids.size?Math.round(done/ids.size*100):0}});
+  return`<div class="grid">
+  <section class="card"><h2>Status distribution</h2><div class="bar" style="height:12px">${Object.keys(ST).map(k=>`<i style="width:${c.total?c[k]/c.total*100:0}%;background:${SC[k]}"></i>`).join('')}</div><div class="cnts">${Object.keys(ST).map(k=>`<div><b style="color:${SC[k]}">${c[k]}</b>${ST[k]}</div>`).join('')}</div><p class="mu">Including skipped: <b>${pc(c,'incl')}%</b> · Excluding skipped: <b>${pc(c,'excl')}%</b></p></section>
+  <section class="card"><h2>Subjects</h2>${barRows(roots())}<small>Hatched part = skipped${m==='incl'?' (counted as done)':''}.</small></section>
+  <section class="card"><h2>Breakdown</h2><select data-c="asub" aria-label="Subject">${roots().map(r=>`<option value="${r.id}"${r.id===sel?' selected':''}>${esc(r.name)}</option>`).join('')}</select>${kids(sel).length?kids(sel).map(k=>barRows([k])+(kids(k.id).length?`<div style="padding-left:14px">${barRows(kids(k.id))}</div>`:'')).join(''):'<p class="mu">This subject has no sub-items yet.</p>'}</section>
+  <section class="card"><h2>Progress over time</h2>${timeline()}</section>
+  <section class="card"><h2>Study plans</h2>${S.plans.length?S.plans.map(p=>{const s=PS(p);return`<div class="lr"><b>${esc(p.name)} <i class="pill st-${s.k}">${s.label}</i></b><span class="mu">${s.pct}%</span><div class="bar" style="position:relative"><i style="width:${s.tot?s.exp/s.tot*100:0}%;background:var(--bd);position:absolute;height:100%"></i><i style="width:${s.pct}%;background:var(--ac);position:relative"></i></div><small style="grid-column:1/3">Planned by today ${s.exp} · done ${s.done} · remaining ${s.rem}${s.rem?` · need ${s.pace}/day`:''}</small></div>`}).join('')+'<small>Grey = planned by today, blue = actual.</small>':'<p class="mu">No plans yet.</p>'}</section>
+  <section class="card"><h2>Revisions</h2><div class="cnts"><div><b>${S.revs.length}</b>Total revisions</div><div><b>${new Set(S.revs.map(r=>r.itemId)).size}</b>Items revised</div></div>${revBy.map(x=>`<div class="lr"><b>${esc(x.r.name)} <small>${x.n} revisions</small></b><span class="mu">${x.pct}%</span>${bar(x.pct,colorOf(x.r.id))}</div>`).join('')}<small>Percent = items revised at least once.</small><h3 style="margin-top:12px">Recent history</h3><div class="list">${rv.slice(0,8).map(r=>`<div><span style="flex:1">${esc(M.get(r.itemId).name)}</span><span class="mu">${fmt(r.date)}</span></div>`).join('')||'<p class="mu">No revisions recorded.</p>'}</div></section></div>`;
+};
+
+
+const BQD=[["Physics",0,{"2025":[[2,4,4,5,6,6,8,10],[2,4,4,5,7,6,8,10]],"2024":[[2,4,5,6,7,8,10,2],[2,2,4,5,6,7,8,10]],"2023":[[2,4,5,4,7,8,10,2],[2,4,5,6,7,8,10,2]]}],["Physics",1,{"2026":[[1,2,9,3,8,7,5,10]],"2025":[[1,2,2,7,8,8,10,9],[1,2,3,7,7,8,9,10]],"2024":[[1,2,7,8,9,10,2,3],[1,2,2,3,7,9,10,9]],"2023":[[1,2,3,3,1,8,9,10],[1,2,3,7,8,8,9,10]]}],["Chemistry",0,{"2025":[[2,2,4,4,3,3,3,5],[2,2,3,3,3,4,4,5]],"2023":[[2,3,4,4,2,3,5,5],[3,4,3,2,5,4,2,3]]}],["Chemistry",1,{"2026":[[3,2,3,2,4,1,5,1]],"2025":[[1,1,2,2,2,3,3,4],[2,2,1,1,3,1,4,4]],"2023":[[1,2,3,3,1,3,3,2],[2,3,4,2,1,2,1,3]]}],["Biology",0,{"2026":[[11,2,1,3,6,7,9,12]],"2025":[[2,8,1,9,1,4,11,7],[4,7,11,9,8,7,1,2],[1,2,4,7,8,9,11,4]],"2023":[[2,7,4,1,11,9,9,8],[1,2,4,7,8,8,9,11],[1,2,4,7,8,9,3,11]]}],["Biology",1,{"2026":[[1,2,3,4,4,7,10,12]],"2025":[[1,2,2,3,4,7,5,11],[1,2,4,3,3,11,7,11],[1,2,2,2,7,3,4,11]],"2023":[[1,2,2,3,4,5,7,11],[1,2,2,2,3,3,11,4],[1,2,2,3,4,5,7,11]]}],["Agriculture",0,{"2026":[[1,2,5,3,4,5,5,6]],"2025":[[1,1,2,3,3,5,5,6],[1,2,2,3,3,5,5,6]],"2023":[[1,1,1,2,3,3,5,5],[1,2,3,3,3,5,5,5]]}],["Agriculture",1,{"2026":[[1,1,2,2,3,3,4,5]],"2025":[[1,1,2,2,3,3,4,5],[1,1,2,2,3,3,4,5]],"2023":[[1,1,2,2,3,3,4,5],[1,1,2,2,3,3,4,5]]}],["ICT",0,{"2026":[[1,2,4,5,6,2,3,3]],"2025":[[1,2,3,3,4,4,5,5],[1,2,2,3,3,4,5,5]],"2024":[[1,2,2,3,3,4,5,5],[1,2,2,3,3,4,5,5]]}]];
+
+/* ---------- Board question analysis ---------- */
+const boardTargets=()=>S.items.filter(i=>kids(i.id).length&&(i.type==='paper'||(i.type==='subject'&&!kids(i.id).some(k=>k.type==='paper')))).sort((a,b)=>ORD.get(a.id)-ORD.get(b.id));
+function BQ(pid){
+  const ch=kids(pid),recs=S.board.filter(r=>r.itemId===pid),cover=(+S.settings.boardCover||80)/100;
+  const freq=ch.map(()=>0),sets=ch.map(()=>0),yr={};let ns=0,total=0;
+  recs.forEach(r=>r.sets.forEach(st=>{
+    ns++;const seen=new Set();
+    st.forEach(n=>{if(n>=1&&n<=ch.length){freq[n-1]++;total++;seen.add(n-1);(yr[r.year]=yr[r.year]||ch.map(()=>0))[n-1]++}});
+    seen.forEach(i=>sets[i]++);
+  }));
+  const rows=ch.map((it,i)=>({it,n:i+1,f:freq[i],s:sets[i]})).sort((a,b)=>b.f-a.f||a.n-b.n);
+  let cum=0,cutF=Infinity;
+  if(total)for(const r of rows){if(!r.f)break;cum+=r.f;cutF=r.f;if(cum/total>=cover-1e-9)break}
+  rows.forEach(r=>{r.rank=rows.findIndex(x=>x.f===r.f)+1;r.imp=total>0&&r.f>0&&r.f>=cutF});
+  return{rows,total,ns,recs,yr,years:Object.keys(yr).sort()};
+}
+function planSkip(pids){
+  const L=[];
+  pids.forEach(pid=>{const b=BQ(pid);if(b.total)b.rows.forEach(r=>{if(!r.imp)lv(r.it.id).forEach(l=>{if(l.status==='not_started')L.push(l)})})});
+  return L;
+}
+function doSkip(pids){
+  if(!pids.some(p=>BQ(p).total))return toast('Add past-paper analysis first.');
+  const L=planSkip(pids);
+  if(!L.length)return toast('Nothing to skip — the other chapters are already skipped or in progress.');
+  mut(()=>L.forEach(l=>{l.status='skipped';l.completedAt=null;l.updatedAt=Date.now()}),'Skipped '+L.length+' items outside the important chapters.');
+}
+function paperBlock(pp){
+  const b=BQ(pp.id);
+  const hd=`<div class="top" style="margin:0 0 8px"><div><h3 style="margin:0"><span class="dot" style="background:${colorOf(pp.id)};display:inline-block"></span> ${esc(path(pp.id))}</h3><small>${b.total?`${b.total} questions · ${b.ns} sets`:''}</small></div><div class="acts2">${b.total?`<button class="btn2" data-a="skippaper" data-id="${pp.id}">Skip the rest</button><button class="btn2" data-a="restore" data-id="${pp.id}">Restore skipped</button>`:''}<button class="btn2" data-a="addbq" data-id="${pp.id}">+ Analysis</button></div></div>`;
+  if(!b.total)return`<section class="card">${hd}<p class="mu">No analysis yet for this paper — add past board questions to rank its chapters.</p></section>`;
+  const mx=b.rows[0].f||1;
+  const rows=b.rows.map(r=>`<tr class="${r.imp?'':'dim'}"><td>${r.f?r.rank:'–'}</td><td><span class="dot" style="background:${SC[dstat(r.it)]};display:inline-block" title="${ST[dstat(r.it)]}"></span> ${esc(r.it.name)}</td><td><div class="fb">${bar(r.f/mx*100,colorOf(pp.id))}<b>${r.f}</b></div></td><td>${r.s}/${b.ns}</td>${b.years.map(y=>`<td>${b.yr[y][r.n-1]}</td>`).join('')}<td>${r.imp?'<i class="pill ok">Important</i>':'<i class="pill">Below cutoff</i>'}${dstat(r.it)==='skipped'?'<i class="pill">Skipped</i>':''}</td></tr>`).join('');
+  const det=`<details><summary>Past papers (${b.ns} sets)</summary>${b.recs.slice().sort((a,c)=>c.year-a.year).map(r=>`<div class="ar"><b>${r.year}</b>${r.note?`<small>${esc(r.note)}</small>`:''}<span class="an">${r.sets.map((st,i)=>`<div>Set ${i+1}: ${st.join(', ')}</div>`).join('')}</span><button class="btn2" data-a="editbq" data-id="${r.id}">Edit</button></div>`).join('')}</details>`;
+  return`<section class="card">${hd}<div class="tbl"><table class="bq"><thead><tr><th>#</th><th>Chapter</th><th>Questions</th><th>In sets</th>${b.years.map(y=>`<th>${y}</th>`).join('')}<th></th></tr></thead><tbody>${rows}</tbody></table></div>${det}</section>`;
+}
+V.board=()=>{
+  const T=boardTargets();
+  if(!T.length)return empty('No papers to analyse','Add subjects with papers and chapters first.','<button class="btn" data-a="nav" data-v="syllabus">Open syllabus</button>');
+  return`<div class="card"><div class="tb"><span>Important chapters cover the top</span><input type="number" min="10" max="100" step="5" value="${+S.settings.boardCover||80}" data-c="cover" style="width:72px" aria-label="Coverage percent"><span>% of past board questions</span><span class="sp"></span><button class="btn2" data-a="skipall">Skip non-important chapters everywhere</button></div><p class="mu" style="margin:8px 0 0">Chapters are ranked by how many past questions came from them. Skipping only touches chapters you haven't started, so completed and ongoing chapters stay as they are.</p></div>`+T.map(paperBlock).join('');
+};
+function openBq(rid,pid){
+  const r=rid?S.board.find(x=>x.id===rid):null,T=boardTargets();
+  if(!T.length)return toast('Add some syllabus items first.');
+  const P=r?r.itemId:(pid||T[0].id);
+  dlg(r?'Edit analysis':'Add analysis',
+    fld('Paper',`<select name="item">${T.map(t=>`<option value="${t.id}"${t.id===P?' selected':''}>${esc(path(t.id))}</option>`).join('')}</select>`)+
+    `<div class="f2">${fld('Exam year',`<input type="number" name="year" min="1990" max="2100" required value="${r?r.year:new Date().getFullYear()}">`)}${fld('Note (optional)',`<input name="note" value="${esc(r?r.note:'')}" placeholder="e.g. Dhaka board">`)}</div>`+
+    fld('Chapter numbers of each question — one line per question set, separated by commas',`<textarea name="sets" required style="min-height:110px" placeholder="2,4,4,5,6,6,8,10">${esc(r?r.sets.map(x=>x.join(',')).join('\n'):'')}</textarea>`),
+    'Save',d=>{
+      const item=d.get('item'),n=kids(item).length;
+      const lines=d.get('sets').replace(/[০-৯]/g,c=>'০১২৩৪৫৬৭৮৯'.indexOf(c)).split(/\n+/).map(l=>l.trim()).filter(Boolean);
+      const sets=lines.map(l=>l.split(/[\s,;]+/).filter(Boolean).map(Number));
+      if(!sets.length){toast('Enter at least one question set.');return false}
+      if(sets.some(st=>st.some(x=>!Number.isInteger(x)||x<1||x>n))){toast('Use chapter numbers between 1 and '+n+' for this paper.');return false}
+      mut(()=>{
+        const o={itemId:item,year:+d.get('year'),note:(d.get('note')||'').trim(),sets};
+        if(r)Object.assign(r,o);else S.board.push({id:uid(),...o});
+      },'Analysis saved');
+    },r?`<button type="button" class="btn2 bad" data-a="delbq" data-id="${r.id}">Delete</button>`:'');
+}
+function seedBoard(){
+  BQD.forEach(([sn,pi,yrs])=>{
+    const sub=S.items.find(i=>!i.parentId&&i.name===sn);if(!sub)return;
+    const pp=S.items.filter(i=>i.parentId===sub.id).find(x=>x.name===['1st','2nd'][pi]+' Paper');if(!pp)return;
+    Object.entries(yrs).forEach(([y,sets])=>{if(!S.board.some(r=>r.itemId===pp.id&&r.year==y))S.board.push({id:uid(),itemId:pp.id,year:+y,note:'',sets})});
+  });
+  S.boardVer=1;
+}
+
+
+/* ---------- Built-in plan: remaining syllabus ---------- */
+const remainingLeaves=()=>allLv().filter(l=>l.status!=='completed'&&l.status!=='skipped');
+const unsched=p=>p.mode==='manual'?[]:planLeaves(p).filter(l=>!idone(p,l)&&!S.asg.some(a=>a.planId===p.id&&a.itemId===l.id));
+const remNew=p=>{const cur=new Set(planLeaves(p).map(l=>l.id));return remainingLeaves().filter(l=>!cur.has(l.id))};
+function remCard(){
+  const L=remainingLeaves(),all=allLv(),sk=all.filter(l=>l.status==='skipped').length,dn=all.filter(l=>l.status==='completed').length;
+  const by=roots().map(r=>{const ls=lv(r.id);return{r,t:ls.length,n:ls.filter(l=>l.status!=='completed'&&l.status!=='skipped').length}}).filter(x=>x.n);
+  return`<section class="card"><div class="top" style="margin:0 0 8px"><div><h3 style="margin:0">Remaining syllabus <i class="pill">Built-in</i></h3><small>Everything that is neither completed nor skipped</small></div>${L.length?'<button class="btn" data-a="remplan">Set a timeline and create plan</button>':''}</div>${L.length?`<div class="cnts"><div><b>${L.length}</b>Items left</div><div><b>${dn}</b>Completed</div><div><b>${sk}</b>Skipped</div></div>${by.map(x=>`<div class="lr"><b>${esc(x.r.name)} <small>${x.n} left of ${x.t}</small></b><span class="mu">${Math.round(x.n/x.t*100)}%</span>${bar(x.n/x.t*100,colorOf(x.r.id))}</div>`).join('')}`:'<p class="mu">Nothing left — every item is completed or skipped.</p>'}</section>`;
+}
+function openRemaining(){
+  const L=remainingLeaves();if(!L.length)return toast('Nothing left — every item is completed or skipped.');
+  const t=today(),c=S.settings,end=c.examDate&&c.examDate>t?c.examDate:addD(t,30);
+  dlg('Plan the remaining syllabus',
+    `<p class="mu">${L.length} items are neither completed nor skipped. Choose a timeline to spread them over.</p>`+
+    `<div class="f2">${fld('Start',`<input type="date" name="start" required value="${t}">`)}${fld('Deadline',`<input type="date" name="deadline" required value="${end}">`)}</div>`+
+    `<div class="f2">${fld('Scheduling',`<select name="mode">${opts({auto:'Automatic',hybrid:'Hybrid (auto, then edit)',manual:'Manual'},'auto')}</select>`)}${fld('Daily target (items, optional)',`<input type="number" min="0" name="perDay" value="${c.perDay||''}">`)}</div>`+
+    fld('Rest on Fridays','<input type="checkbox" name="restFri"'+(c.restFri?' checked':'')+'>')+'<div id="pv" class="mu"></div>',
+    'Create plan',d=>{
+      const st=d.get('start'),dl=d.get('deadline');
+      if(dl<st){toast('Deadline must be on or after the start date.');return false}
+      const ids=remainingLeaves().map(l=>l.id);
+      mut(()=>{const np=makePlan({name:'Remaining syllabus',type:'custom',desc:'Everything that was neither completed nor skipped when this plan was made.',start:st,deadline:dl,ids,mode:d.get('mode'),perDay:+d.get('perDay')||0,restFri:!!d.get('restFri'),sys:'remaining'});openP.add(np.id)},'Plan created');
+    });
+  $('#dlg form').dataset.rem='1';pv();
+}
+function syncRemaining(id){
+  const p=plan(id),t=today();
+  if(p.deadline<t)return toast('The deadline has passed — extend it with Edit first.');
+  const add=remNew(p).map(l=>l.id);
+  mut(()=>{
+    p.selectedItemIds=[...new Set([...p.selectedItemIds,...add])];
+    S.asg=S.asg.filter(a=>!(a.planId===p.id&&M.get(a.itemId).status==='skipped'));
+    unsched(p).forEach(l=>S.asg.push({id:uid(),planId:p.id,itemId:l.id,date:p.deadline,status:'pending',priority:'med',dur:0}));
+    const pend=S.asg.filter(a=>a.planId===p.id&&!adone(a)).sort((a,b)=>ORD.get(a.itemId)-ORD.get(b.itemId));
+    const r=sched(pend.map(a=>a.itemId),p.start>t?p.start:t,p.deadline,+p.perDay||0,p.restFri);
+    pend.forEach((a,i)=>{if(r.out[i])a.date=r.out[i].date});
+    p.updatedAt=Date.now();
+  },'Synced with the remaining syllabus');
+}
+
+/* ---------- English / Bangla ---------- */
+const BN={
+'Dashboard':'ড্যাশবোর্ড','Syllabus':'সিলেবাস','Planner':'পরিকল্পনা','Calendar':'ক্যালেন্ডার','Analytics':'বিশ্লেষণ','Settings':'সেটিংস','Settings and data':'সেটিংস ও ডেটা','Language':'ভাষা',
+'Add subject':'বিষয় যোগ করুন','Update progress':'অগ্রগতি আপডেট','Create plan':'পরিকল্পনা তৈরি','New plan':'নতুন পরিকল্পনা','Add task':'কাজ যোগ করুন','Excl. skipped':'স্কিপ বাদে','Incl. skipped':'স্কিপ সহ','Progress calculation':'অগ্রগতির হিসাব',
+'Not started':'শুরু হয়নি','Ongoing':'চলমান','Completed':'সম্পন্ন','Skipped':'স্কিপ করা',
+'Overall progress':'সামগ্রিক অগ্রগতি','Skipped not counted. Including skipped:':'স্কিপ গণনায় নেই। স্কিপ সহ:','Skipped counted as done. Excluding skipped:':'স্কিপ সম্পন্ন হিসেবে গণ্য। স্কিপ বাদে:',
+'Subjects':'বিষয়সমূহ','Subject':'বিষয়','Today':'আজ','Active plans':'চলমান পরিকল্পনা','Upcoming deadlines':'আসন্ন সময়সীমা','Upcoming revisions':'আসন্ন রিভিশন','Next 7 days':'আগামী ৭ দিন',
+'Nothing scheduled today.':'আজ কোনো কাজ নেই।','Create a plan to get a daily schedule.':'দৈনিক রুটিন পেতে একটি পরিকল্পনা তৈরি করুন।','No active plans.':'কোনো চলমান পরিকল্পনা নেই।','Create one':'তৈরি করুন','No upcoming deadlines.':'কোনো আসন্ন সময়সীমা নেই।','No revision tasks scheduled.':'কোনো রিভিশন নির্ধারিত নেই।','overdue':'বিলম্বিত',
+"You haven't backed up recently.":'সম্প্রতি ব্যাকআপ নেননি।','Export backup':'ব্যাকআপ এক্সপোর্ট',
+'Start with your syllabus':'সিলেবাস দিয়ে শুরু করুন','Add your first subject, or load a small sample to see how everything fits together.':'প্রথম বিষয় যোগ করুন, অথবা নমুনা ডেটা লোড করে দেখুন।','Add a subject':'বিষয় যোগ করুন','Load default syllabus':'ডিফল্ট সিলেবাস লোড করুন','Load sample':'নমুনা ডেটা','Your syllabus is empty':'আপনার সিলেবাস খালি','Add a subject first, then break it into papers, chapters and topics. Levels are optional.':'প্রথমে একটি বিষয় যোগ করুন, তারপর পত্র, অধ্যায় ও টপিকে ভাগ করুন। স্তরগুলো ঐচ্ছিক।','Add your first subject':'প্রথম বিষয় যোগ করুন',
+'Search syllabus':'সিলেবাস খুঁজুন','All statuses':'সব অবস্থা','Filter by status':'অবস্থা অনুযায়ী ফিল্টার','Expand all':'সব খুলুন','Collapse all':'সব বন্ধ করুন','No matching items.':'কিছু পাওয়া যায়নি।',
+'Double-click to rename':'নাম বদলাতে ডাবল-ক্লিক','Manually overridden':'ম্যানুয়ালি নির্ধারিত','Manual override':'ম্যানুয়াল পরিবর্তন','Add child':'উপ-আইটেম যোগ','Revisions':'রিভিশন','Edit':'সম্পাদনা','Move up':'উপরে সরান','Move down':'নিচে সরান','Delete':'মুছুন','Expand or collapse':'খুলুন বা বন্ধ করুন',
+'subject':'বিষয়','paper':'পত্র','chapter':'অধ্যায়','topic':'টপিক','Easy':'সহজ','Medium':'মাঝারি','Hard':'কঠিন','High':'উচ্চ','Low':'নিম্ন','1st Paper':'১ম পত্র','2nd Paper':'২য় পত্র',
+'Physics':'পদার্থবিজ্ঞান','Chemistry':'রসায়ন','Biology':'জীববিজ্ঞান','Agriculture':'কৃষিশিক্ষা','ICT':'তথ্য ও যোগাযোগ প্রযুক্তি','Bangla':'বাংলা','English':'ইংরেজি',
+'No study plans yet':'এখনো কোনো পড়ার পরিকল্পনা নেই','Create a plan to spread chapters over a timeline, track your pace and see tasks in the calendar.':'সময়সীমা অনুযায়ী অধ্যায় ভাগ করতে, গতি দেখতে এবং ক্যালেন্ডারে কাজ দেখতে পরিকল্পনা তৈরি করুন।','Create a study plan':'পড়ার পরিকল্পনা তৈরি করুন',
+'Hide tasks':'কাজ লুকান','Tasks':'কাজ','+ Task':'+ কাজ','Reschedule unfinished':'অসমাপ্ত কাজ পুনর্বিন্যাস','Redistribute unfinished tasks from today to the deadline':'আজ থেকে সময়সীমা পর্যন্ত অসমাপ্ত কাজ নতুন করে ভাগ করুন',
+'Items':'আইটেম','Done':'সম্পন্ন','Remaining':'বাকি','Complete':'সম্পন্ন','Needed / day':'দৈনিক প্রয়োজন','Overdue':'বিলম্বিত','On track':'ঠিক পথে','Behind':'পিছিয়ে','No items':'আইটেম নেই',
+'Full syllabus':'পূর্ণ সিলেবাস','Revision':'রিভিশন','Partial':'আংশিক','Custom':'কাস্টম','Also in:':'আরও আছে:','No tasks yet.':'এখনো কোনো কাজ নেই।','Add a task':'কাজ যোগ করুন','Add tasks with dates to build your schedule.':'তারিখ দিয়ে কাজ যোগ করে রুটিন তৈরি করুন।',
+'Mark done':'সম্পন্ন চিহ্নিত করুন','Delete task':'কাজ মুছুন','Priority':'অগ্রাধিকার','Date':'তারিখ','Rename':'নাম বদলান',
+'Month':'মাস','Week':'সপ্তাহ','Day':'দিন','Previous':'আগের','Next':'পরের','All plans':'সব পরিকল্পনা','All subjects':'সব বিষয়','Colour by subject':'বিষয় অনুযায়ী রং','Colour by plan':'পরিকল্পনা অনুযায়ী রং','Filter by plan':'পরিকল্পনা ফিল্টার','Filter by subject':'বিষয় ফিল্টার','Colour by':'রং অনুযায়ী',
+'Mon':'সোম','Tue':'মঙ্গল','Wed':'বুধ','Thu':'বৃহ','Fri':'শুক্র','Sat':'শনি','Sun':'রবি',
+'No plans yet — create one in the Planner, or add tasks after creating a plan. Drag tasks between days to reschedule.':'এখনো কোনো পরিকল্পনা নেই — পরিকল্পনা অংশে তৈরি করুন। কাজ এক দিন থেকে অন্য দিনে টেনে পুনর্নির্ধারণ করা যায়।',
+'Status distribution':'অবস্থার বিন্যাস','Breakdown':'বিস্তারিত','Progress over time':'সময়ের সাথে অগ্রগতি','Study plans':'পড়ার পরিকল্পনা',
+'Including skipped:':'স্কিপ সহ:','Excluding skipped:':'স্কিপ বাদে:','Hatched part = skipped':'দাগকাটা অংশ = স্কিপ','(counted as done)':'(সম্পন্ন হিসেবে গণ্য)','This subject has no sub-items yet.':'এই বিষয়ে এখনো কোনো উপ-আইটেম নেই।',
+'Complete items on a few different days to see your progress curve.':'অগ্রগতির রেখা দেখতে কয়েকটি ভিন্ন দিনে আইটেম সম্পন্ন করুন।','Grey = planned by today, blue = actual.':'ধূসর = আজ পর্যন্ত পরিকল্পিত, নীল = প্রকৃত।','No plans yet.':'এখনো কোনো পরিকল্পনা নেই।',
+'Total revisions':'মোট রিভিশন','Items revised':'রিভিশন হওয়া আইটেম','Percent = items revised at least once.':'শতকরা = অন্তত একবার রিভিশন হওয়া আইটেম।','Recent history':'সাম্প্রতিক ইতিহাস','No revisions recorded.':'কোনো রিভিশন নেই।',
+'No data to analyse yet':'বিশ্লেষণের মতো ডেটা এখনো নেই','Add syllabus items and update their status to see progress here.':'অগ্রগতি দেখতে সিলেবাস আইটেম যোগ করে অবস্থা আপডেট করুন।',
+'Name':'নাম','Level':'স্তর','More options':'আরও অপশন','Notes':'নোট','Difficulty':'কঠিনতা','Colour (subjects)':'রং (বিষয়ের জন্য)','Edit item':'আইটেম সম্পাদনা','Save':'সংরক্ষণ','Cancel':'বাতিল','Close':'বন্ধ','Please confirm':'নিশ্চিত করুন',
+'Record a revision':'রিভিশন যোগ করুন','Notes (optional)':'নোট (ঐচ্ছিক)','Add revision':'রিভিশন যোগ','No revisions yet. Completion status is not affected by revisions.':'এখনো কোনো রিভিশন নেই। রিভিশনে সম্পন্ন অবস্থা বদলায় না।','Delete revision':'রিভিশন মুছুন',
+'New study plan':'নতুন পড়ার পরিকল্পনা','Edit plan':'পরিকল্পনা সম্পাদনা','Plan name':'পরিকল্পনার নাম','Type':'ধরন','Scheduling':'সময়সূচি পদ্ধতি','Automatic':'স্বয়ংক্রিয়','Manual':'ম্যানুয়াল','Hybrid (auto, then edit)':'হাইব্রিড (অটো, পরে সম্পাদনা)','Start':'শুরু','Deadline':'সময়সীমা','Daily target (items, optional)':'দৈনিক লক্ষ্য (আইটেম, ঐচ্ছিক)','Rest on Fridays':'শুক্রবার বিশ্রাম','Scope':'পরিসর','Entire syllabus':'সম্পূর্ণ সিলেবাস','Description':'বিবরণ',
+'Manual: after creating the plan, add tasks with specific dates from the plan card or the calendar.':'ম্যানুয়াল: পরিকল্পনা তৈরির পর পরিকল্পনা কার্ড বা ক্যালেন্ডার থেকে নির্দিষ্ট তারিখে কাজ যোগ করুন।','Select syllabus scope to preview the schedule.':'রুটিনের প্রিভিউ দেখতে সিলেবাসের পরিসর বাছাই করুন।','Deadline must fall on or after the start date.':'সময়সীমা শুরুর তারিখের সমান বা পরে হতে হবে।','The daily target is too low to finish by the deadline — extra items land on the last day.':'দৈনিক লক্ষ্য কম, তাই সময়সীমায় শেষ হবে না — বাড়তি আইটেম শেষ দিনে রাখা হয়েছে।',
+'Edit task':'কাজ সম্পাদনা','Plan':'পরিকল্পনা','Syllabus item':'সিলেবাস আইটেম','Estimated minutes (optional)':'আনুমানিক মিনিট (ঐচ্ছিক)','In this plan':'এই পরিকল্পনায়','Other items':'অন্যান্য আইটেম',
+'Your name (optional)':'আপনার নাম (ঐচ্ছিক)','Exam name':'পরীক্ষার নাম','Exam date':'পরীক্ষার তারিখ','Theme':'থিম','Light':'লাইট','Dark':'ডার্ক','Excluding skipped':'স্কিপ বাদে','Including skipped':'স্কিপ সহ','Default daily target':'ডিফল্ট দৈনিক লক্ষ্য','Rest on Fridays by default':'ডিফল্টভাবে শুক্রবার বিশ্রাম','Data':'ডেটা','Export JSON':'JSON এক্সপোর্ট','Import JSON':'JSON ইম্পোর্ট','Remove sample':'নমুনা মুছুন','Erase all':'সব মুছুন',
+'Add default':'আপডেট করুন','Update':'আপডেট','Delete plan':'পরিকল্পনা মুছুন','Add sample':'নমুনা যোগ','Replace data':'ডেটা প্রতিস্থাপন','Replace current data?':'বর্তমান ডেটা প্রতিস্থাপন করবেন?',
+'This backup contains':'এই ব্যাকআপে আছে','syllabus items,':'সিলেবাস আইটেম,','plans,':'পরিকল্পনা,','tasks and':'কাজ এবং','revision records.':'রিভিশন রেকর্ড।',
+'Update the default syllabus? Placeholder chapter names are replaced with the real titles; your progress, edited names and notes are kept.':'ডিফল্ট সিলেবাস আপডেট করবেন? সাধারণ অধ্যায়ের নামগুলো আসল শিরোনামে বদলাবে; আপনার অগ্রগতি, সম্পাদিত নাম ও নোট অপরিবর্তিত থাকবে।',
+'Add sample data alongside your existing syllabus?':'বিদ্যমান সিলেবাসের পাশাপাশি নমুনা ডেটা যোগ করবেন?','Erase all syllabus, plans and revisions? Export a backup first if unsure.':'সব সিলেবাস, পরিকল্পনা ও রিভিশন মুছবেন? নিশ্চিত না হলে আগে ব্যাকআপ নিন।',
+'Status updated':'অবস্থা আপডেট হয়েছে','Added':'যোগ হয়েছে','Saved':'সংরক্ষিত','Undo':'ফিরিয়ে আনুন','Undone':'ফিরিয়ে আনা হয়েছে','Deleted':'মুছে ফেলা হয়েছে','Renamed':'নাম বদলানো হয়েছে','Task updated':'কাজ আপডেট হয়েছে','Task added':'কাজ যোগ হয়েছে','Task removed':'কাজ সরানো হয়েছে','Rescheduled':'পুনর্নির্ধারিত','Plan created':'পরিকল্পনা তৈরি হয়েছে','Plan updated':'পরিকল্পনা আপডেট হয়েছে','Plan deleted':'পরিকল্পনা মুছে ফেলা হয়েছে','Revision recorded':'রিভিশন যোগ হয়েছে','Settings saved':'সেটিংস সংরক্ষিত','Backup downloaded':'ব্যাকআপ ডাউনলোড হয়েছে','Backup restored':'ব্যাকআপ পুনরুদ্ধার হয়েছে','Sample data loaded':'নমুনা ডেটা লোড হয়েছে','Sample data removed':'নমুনা ডেটা মুছে ফেলা হয়েছে','All data erased':'সব ডেটা মুছে ফেলা হয়েছে','Default syllabus updated':'ডিফল্ট সিলেবাস আপডেট হয়েছে',
+'Add some syllabus items first.':'আগে কিছু সিলেবাস আইটেম যোগ করুন।','Create a study plan first.':'আগে একটি পড়ার পরিকল্পনা তৈরি করুন।','Select at least one subject, paper, chapter or topic.':'অন্তত একটি বিষয়, পত্র, অধ্যায় বা টপিক বাছাই করুন।','Deadline must be on or after the start date.':'সময়সীমা শুরুর তারিখের সমান বা পরে হতে হবে।','That file is not a valid backup — nothing was changed.':'ফাইলটি বৈধ ব্যাকআপ নয় — কিছু পরিবর্তন হয়নি।','The deadline has passed — extend it with Edit first.':'সময়সীমা পেরিয়ে গেছে — আগে সম্পাদনা করে বাড়ান।','Unfinished tasks redistributed up to the deadline':'অসমাপ্ত কাজ সময়সীমা পর্যন্ত নতুন করে ভাগ করা হয়েছে','This item cannot be placed at any level.':'এই আইটেম কোনো স্তরে বসানো যাচ্ছে না।'
+};
+Object.assign(BN,{"Board question analysis": "বোর্ড প্রশ্ন বিশ্লেষণ", "Add analysis": "বিশ্লেষণ যোগ করুন", "Edit analysis": "বিশ্লেষণ সম্পাদনা", "+ Analysis": "+ বিশ্লেষণ", "Skip the rest": "বাকিগুলো স্কিপ", "Restore skipped": "স্কিপ ফিরিয়ে আনুন", "Skip non-important chapters everywhere": "সব পত্রে অগুরুত্বপূর্ণ অধ্যায় স্কিপ করুন", "Important chapters cover the top": "গুরুত্বপূর্ণ অধ্যায়গুলো শীর্ষ", "% of past board questions": "% বোর্ড প্রশ্ন কভার করে", "Coverage percent": "কভারেজ শতাংশ", "Chapters are ranked by how many past questions came from them. Skipping only touches chapters you haven't started, so completed and ongoing chapters stay as they are.": "কত প্রশ্ন এসেছে তার ভিত্তিতে অধ্যায়ের র‍্যাঙ্ক করা হয়েছে। স্কিপ শুধু যেসব অধ্যায় শুরু করেননি সেগুলোতে প্রযোজ্য — সম্পন্ন ও চলমান অধ্যায় যেমন আছে তেমনই থাকবে।", "Questions": "প্রশ্ন", "In sets": "সেটে", "Important": "গুরুত্বপূর্ণ", "Below cutoff": "সীমার নিচে", "No analysis yet for this paper — add past board questions to rank its chapters.": "এই পত্রের জন্য এখনো বিশ্লেষণ নেই — অধ্যায়ের র‍্যাঙ্ক পেতে আগের বোর্ড প্রশ্ন যোগ করুন।", "No papers to analyse": "বিশ্লেষণের মতো পত্র নেই", "Add subjects with papers and chapters first.": "আগে পত্র ও অধ্যায়সহ বিষয় যোগ করুন।", "Open syllabus": "সিলেবাস খুলুন", "Paper": "পত্র", "Exam year": "পরীক্ষার সাল", "Chapter numbers of each question — one line per question set, separated by commas": "প্রতিটি প্রশ্নের অধ্যায় নম্বর — প্রতি প্রশ্নসেটের জন্য এক লাইন, কমা দিয়ে আলাদা করুন", "Analysis saved": "বিশ্লেষণ সংরক্ষিত", "Analysis deleted": "বিশ্লেষণ মুছে ফেলা হয়েছে", "Add past-paper analysis first.": "আগে আগের বছরের প্রশ্নের বিশ্লেষণ যোগ করুন।", "Nothing to skip — the other chapters are already skipped or in progress.": "স্কিপ করার মতো কিছু নেই — বাকি অধ্যায় ইতিমধ্যে স্কিপ বা চলমান।", "Enter at least one question set.": "অন্তত একটি প্রশ্নসেট লিখুন।", "No skipped chapters to restore.": "ফিরিয়ে আনার মতো স্কিপ করা অধ্যায় নেই।"});
+Object.assign(BN,{"Built-in": "বিল্ট-ইন", "Remaining syllabus": "অবশিষ্ট সিলেবাস", "Everything that is neither completed nor skipped": "যা সম্পন্নও নয়, স্কিপও নয় — সবকিছু", "Set a timeline and create plan": "সময়সীমা ঠিক করে পরিকল্পনা তৈরি করুন", "Items left": "বাকি আইটেম", "Nothing left — every item is completed or skipped.": "কিছুই বাকি নেই — সবকিছু সম্পন্ন বা স্কিপ করা।", "Plan the remaining syllabus": "অবশিষ্ট সিলেবাসের পরিকল্পনা", "Sync remaining": "অবশিষ্টের সাথে সিঙ্ক", "Add newly unfinished or un-skipped items and drop skipped ones": "নতুন অসমাপ্ত বা স্কিপ-মুক্ত আইটেম যোগ করুন এবং স্কিপ করাগুলো বাদ দিন", "Synced with the remaining syllabus": "অবশিষ্ট সিলেবাসের সাথে সিঙ্ক হয়েছে", "Everything that was neither completed nor skipped when this plan was made.": "পরিকল্পনা তৈরির সময় যা সম্পন্নও ছিল না, স্কিপও না — সবকিছু।"});
+BN['Subject-wise progress']='বিষয়ভিত্তিক অগ্রগতি';
+const LK=Object.keys(BN).filter(k=>k.length>=12).sort((a,b)=>b.length-a.length);
+const W=w=>BN[w]||w;
+const PAT=[
+[/^Chapter (\d+)\b/,(m,a)=>'অধ্যায় '+a],
+[/^Hi (.+) — overall$/,(m,a)=>a+' — সামগ্রিক অগ্রগতি'],
+[/^Days to (.*):$/,(m,a)=>(a==='exam'?'পরীক্ষা':a)+' পর্যন্ত বাকি:'],
+[/^(subject|paper|chapter|topic)( · .*)?$/,(m,a,b)=>W(a)+(b||'')],
+[/^Auto: (.+)$/,(m,a)=>'অটো: '+W(a)],
+[/^Status of (.+)$/,(m,a)=>'অবস্থা: '+a],
+[/^Add (subject|paper|chapter|topic) to (.+)$/,(m,a,b)=>b+'-এ '+W(a)+' যোগ করুন'],
+[/^Revisions · (.+)$/,(m,a)=>'রিভিশন · '+a],
+[/^(.+) · (\d+)d · (\d+) left$/,(m,a,b,c)=>a+' · '+b+' দিন · '+c+' বাকি'],
+[/^(\d+) of (\d+) items completed$/,(m,a,b)=>b+'টির মধ্যে '+a+'টি সম্পন্ন'],
+[/^Planned by today (\d+) · done (\d+) · remaining (\d+)( · need ([\d.]+)\/day)?$/,(m,a,b,c,d,e)=>'আজ পর্যন্ত পরিকল্পিত '+a+' · সম্পন্ন '+b+' · বাকি '+c+(e?' · দৈনিক প্রয়োজন '+e:'')],
+[/^(\d+) revisions$/,(m,a)=>a+' রিভিশন'],
+[/^(\d+)\/(\d+)( · (\d+) skipped)?$/,(m,a,b,c,d)=>a+'/'+b+(d?' · '+d+' স্কিপ':'')],
+[/^\+(\d+) more$/,(m,a)=>'+'+a+' আরও'],
+[/^(\d+) items over (\d+) study days$/,(m,a,b)=>b+' পড়ার দিনে '+a+'টি আইটেম'],
+[/^… and (\d+) more days$/,(m,a)=>'… আরও '+a+' দিন'],
+[/\((auto|manual|hybrid)\)/,(m,a)=>({auto:'(স্বয়ংক্রিয়)',manual:'(ম্যানুয়াল)',hybrid:'(হাইব্রিড)'})[a]],
+[/^Rescheduled to (.+)$/,(m,a)=>'পুনর্নির্ধারিত: '+a],
+[/^Delete "(.*)"( and (\d+) nested items)?\? This also removes (\d+) scheduled tasks and (\d+) revision records\. You can undo right after\.$/,(m,a,b,c,d,e)=>'"'+a+'"'+(c?' ও এর '+c+'টি উপ-আইটেম':'')+' মুছবেন? এতে '+d+'টি নির্ধারিত কাজ ও '+e+'টি রিভিশন রেকর্ডও মুছবে। পরে ফিরিয়ে আনা যাবে।'],
+[/^Delete plan "(.*)" and its tasks\? Syllabus progress is not affected\.$/,(m,a)=>'"'+a+'" পরিকল্পনা ও এর কাজগুলো মুছবেন? সিলেবাসের অগ্রগতি অপরিবর্তিত থাকবে।'],
+[/^Your current data \((\d+) items, (\d+) plans\) will be replaced\. You can undo right after\.$/,(m,a,b)=>'আপনার বর্তমান ডেটা ('+a+'টি আইটেম, '+b+'টি পরিকল্পনা) প্রতিস্থাপিত হবে। পরে ফিরিয়ে আনা যাবে।'],
+[/^Last backup: (.*)\. Data lives in this browser only — export a backup regularly\.$/,(m,a)=>'সর্বশেষ ব্যাকআপ: '+(a==='never'?'কখনো না':a)+'। ডেটা শুধু এই ব্রাউজারে থাকে — নিয়মিত ব্যাকআপ নিন।']
+];
+PAT.push(
+[/^(\d+) items are neither completed nor skipped\. Choose a timeline to spread them over\.$/,(m,a)=>a+'টি আইটেম সম্পন্নও নয়, স্কিপও নয়। এগুলো ছড়িয়ে দিতে একটি সময়সীমা বেছে নিন।'],
+[/^(\d+) left of (\d+)$/,(m,a,b)=>b+'-এর মধ্যে '+a+' বাকি'],
+[/^Skipped (\d+) items outside the important chapters\.$/,(m,a)=>'গুরুত্বপূর্ণ নয় এমন অধ্যায়ের '+a+'টি আইটেম স্কিপ করা হয়েছে।'],
+[/^Restored (\d+) items\.$/,(m,a)=>a+'টি আইটেম ফিরিয়ে আনা হয়েছে।'],
+[/^Use chapter numbers between 1 and (\d+) for this paper\.$/,(m,a)=>'এই পত্রের জন্য ১ থেকে '+a+' এর মধ্যে অধ্যায় নম্বর দিন।'],
+[/^(\d+) questions · (\d+) sets$/,(m,a,b)=>a+'টি প্রশ্ন · '+b+'টি সেট'],
+[/^Past papers \((\d+) sets\)$/,(m,a)=>'আগের প্রশ্ন ('+a+'টি সেট)'],
+[/^Set (\d+): (.*)$/,(m,a,b)=>'সেট '+a+': '+b]
+);
+const DG='০১২৩৪৫৬৭৮৯',bd=s=>s.replace(/\d/g,d=>DG[d]);
+function trStr(s){
+  const t=s.trim();if(!t)return s;
+  let o;
+  if(t.includes(' › '))o=t.split(' › ').map(x=>trStr(x)).join(' › ');
+  else if(BN[t]!=null)o=BN[t];
+  else{o=t;for(const[re,f]of PAT)o=o.replace(re,f);for(const k of LK)if(o.includes(k))o=o.split(k).join(BN[k])}
+  return s.replace(t,()=>o);
+}
+function tr(root){
+  if(!root||S.settings.lang!=='bn')return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[];
+  while(w.nextNode())ns.push(w.currentNode);
+  ns.forEach(n=>{const p=n.parentNode&&n.parentNode.nodeName;if(p==='SCRIPT'||p==='STYLE'||p==='TEXTAREA')return;n.nodeValue=bd(trStr(n.nodeValue))});
+  root.querySelectorAll('[placeholder],[aria-label],[title],[label]').forEach(e=>['placeholder','aria-label','title','label'].forEach(a=>{const v=e.getAttribute(a);if(v)e.setAttribute(a,trStr(v))}));
+}
+
+/* ---------- render ---------- */
+function render(){
+  idx();
+  document.documentElement.dataset.theme=S.settings.theme;document.documentElement.lang=S.settings.lang;
+  const bn=S.settings.lang==='bn';
+  $('#side').innerHTML=`<div class="brand">▤ Syllabus</div>`+NAV.map(n=>`<button class="nv${route===n[0]?' on':''}" data-a="nav" data-v="${n[0]}"${route===n[0]?' aria-current="page"':''}>${bn?n[2]:n[1]}</button>`).join('')+`<button class="nv" data-a="lang" aria-label="Language">${bn?'EN':'বাং'}</button><button class="nv gear" data-a="menu" aria-label="Settings and data">⚙ <span>Settings</span></button>`;
+  const n=NAV.find(x=>x[0]===route)||NAV[0];
+  $('#title').textContent=bn?n[2]:n[1];
+  $('#acts').innerHTML=ACTS[route]?ACTS[route]():'';
+  $('#view').innerHTML=(V[route]||V.dashboard)();
+  tr($('#side'));tr($('#acts'));tr($('#view'));
+}
+const saveExp=()=>{try{localStorage.setItem(K+'-x',JSON.stringify([...exp]))}catch(e){}};
+
+/* ---------- actions ---------- */
+const A={
+  nav:el=>{route=el.dataset.v;location.hash=route;render()},
+  close:()=>$('#dlg').close(),
+  save:()=>{const d=$('#dlg'),f=d.querySelector('form');if(!d._f||!f.reportValidity())return;d._re=false;const r=d._f(new FormData(f),f);if(r!==false&&!d._re)d.close()},
+  undo:()=>{const t=$('#toast');if(t._s){S=JSON.parse(t._s);t._s='';save();render();toast('Undone')}},
+  menu:()=>openSettings(),
+  calc:el=>mut(()=>S.settings.calc=el.dataset.v),
+  addsub:()=>openItem(null,''),
+  addkid:el=>openItem(null,el.dataset.id),
+  edit:el=>openItem(el.dataset.id),
+  rev:el=>openRev(el.dataset.id),
+  delrev:el=>mut(()=>{S.revs=S.revs.filter(r=>r.id!==el.dataset.id)},''),
+  tog:el=>{const i=el.dataset.id;exp.has(i)?exp.delete(i):exp.add(i);saveExp();render()},
+  expall:()=>{S.items.forEach(i=>kids(i.id).length&&exp.add(i.id));saveExp();render()},
+  colall:()=>{exp.clear();saveExp();render()},
+  ren:()=>{},
+  up:el=>move(el.dataset.id,-1),
+  down:el=>move(el.dataset.id,1),
+  del:el=>{
+    const id=el.dataset.id,it=M.get(id),ids=descIds(id),a=S.asg.filter(x=>ids.has(x.itemId)).length,r=S.revs.filter(x=>ids.has(x.itemId)).length;
+    const go=()=>mut(()=>purge(ids),'Deleted');
+    if(ids.size>1||a||r)ask(`Delete "${esc(it.name)}"${ids.size>1?' and '+(ids.size-1)+' nested items':''}? This also removes ${a} scheduled tasks and ${r} revision records. You can undo right after.`,'Delete',go);else go();
+  },
+  newplan:()=>openPlan(),
+  editplan:el=>openPlan(el.dataset.id),
+  delplan:el=>{const p=plan(el.dataset.id);ask(`Delete plan "${esc(p.name)}" and its tasks? Syllabus progress is not affected.`,'Delete plan',()=>mut(()=>{S.plans=S.plans.filter(x=>x.id!==p.id);S.asg=S.asg.filter(a=>a.planId!==p.id);S.revs.forEach(r=>{if(r.planId===p.id)r.planId=null})},'Plan deleted'))},
+  toggleP:el=>{const i=el.dataset.id;openP.has(i)?openP.delete(i):openP.add(i);render()},
+  newasg:el=>openAsg(null,el.dataset.p),
+  asged:el=>openAsg(el.dataset.id),
+  addday:el=>openAsg(null,null,el.dataset.d),
+  delasg:el=>{mut(()=>{S.asg=S.asg.filter(a=>a.id!==el.dataset.id)},'Task removed');$('#dlg').open&&$('#dlg').close()},
+  asgtog:el=>mut(()=>{
+    const a=S.asg.find(x=>x.id===el.dataset.id),p=plan(a.planId),it=M.get(a.itemId);
+    if(adone(a)){
+      a.status='pending';
+      if(p.type==='revision')S.revs=S.revs.filter(r=>!(r.planId===p.id&&r.itemId===a.itemId));
+      else if(it.status==='completed'){it.status='ongoing';it.completedAt=null}
+    }else{
+      a.status='done';
+      if(p.type==='revision')S.revs.push({id:uid(),itemId:it.id,planId:p.id,date:today(),notes:'',createdAt:Date.now()});
+      else if(it.status!=='completed'){it.status='completed';it.completedAt=new Date().toISOString()}
+    }
+  },'Task updated'),
+  spread:el=>{
+    const p=plan(el.dataset.id),t=today(),st=p.start>t?p.start:t;
+    const pend=S.asg.filter(a=>a.planId===p.id&&!adone(a)).sort((a,b)=>ORD.get(a.itemId)-ORD.get(b.itemId));
+    const r=sched(pend.map(a=>a.itemId),st,p.deadline,+p.perDay||0,p.restFri);
+    if(!r.out.length)return toast('The deadline has passed — extend it with Edit first.');
+    mut(()=>pend.forEach((a,i)=>a.date=r.out[i].date),'Unfinished tasks redistributed up to the deadline');
+  },
+  cnav:el=>{
+    const n=+el.dataset.v;if(!n){cal.date=today()}
+    else if(cal.view==='month'){const d=pd(cal.date);d.setDate(1);d.setMonth(d.getMonth()+n);cal.date=iso(d)}
+    else cal.date=addD(cal.date,n*(cal.view==='week'?7:1));
+    render();
+  },
+  cview:el=>{cal.view=el.dataset.v;render()},
+  goday:el=>{cal.date=el.dataset.d;cal.view='day';route='calendar';location.hash='calendar';render()},
+  export:()=>{
+    S.settings.lastBackup=Date.now();save();
+    const b=new Blob([JSON.stringify({app:'syllabus-tracker',version:1,exportedAt:new Date().toISOString(),...S},null,2)],{type:'application/json'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(b);a.download='syllabus-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);render();toast('Backup downloaded');
+  },
+  import:()=>$('#imp').click(),
+  sample:()=>S.items.length?ask('Add sample data alongside your existing syllabus?','Add sample',loadSample):loadSample(),
+  _:0
+};
+function loadSample(){
+    mut(()=>{
+      idx();
+      const mk=(name,type,parent,o)=>{const it={id:uid(),name,type,parentId:parent,order:S.items.filter(x=>x.parentId===parent).length,status:'not_started',manual:null,notes:'',difficulty:'',color:'',createdAt:Date.now(),updatedAt:Date.now(),completedAt:null,s:1,...o};S.items.push(it);return it.id};
+      const dn=n=>new Date(Date.now()-n*864e5).toISOString();
+      const ir=mk('International Relations','subject','',{color:PAL[0]});
+      const p1=mk('Paper I: Theory','paper',ir),p2=mk('Paper II: Global Politics','paper',ir);
+      const ch=(par,n,ts)=>{const c=mk(n,'chapter',par);ts.forEach(([t,s,d])=>mk(t,'topic',c,{status:s,completedAt:s==='completed'?dn(d||1):null,difficulty:d>2?'Hard':''}))};
+      ch(p1,'Realism',[['Classical realism','completed',6],['Neorealism','completed',4],['Offensive realism','ongoing']]);
+      ch(p1,'Liberalism',[['Liberal institutionalism','completed',2],['Democratic peace','not_started'],['Neoliberalism','not_started']]);
+      ch(p2,'Cold War',[['Origins','completed',5],['Détente','skipped'],['Collapse','not_started']]);
+      ch(p2,'South Asia',[['Regional security','not_started'],['SAARC and BIMSTEC','not_started']]);
+      const rm=mk('Research Methods','subject','',{color:PAL[2]});
+      mk('Research design','chapter',rm,{status:'completed',completedAt:dn(3)});mk('Sampling','chapter',rm,{status:'ongoing'});mk('Survey analysis','chapter',rm);
+      const rid=S.items.find(i=>i.s&&i.name==='Research design').id;S.revs.push({id:uid(),itemId:rid,planId:null,date:today(),notes:'First pass',createdAt:Date.now()});
+      idx();
+      const t=today();
+      makePlan({name:'Two-week sprint',type:'full',start:t,deadline:addD(t,13),ids:[ir,rm],mode:'auto',s:1});
+    },'Sample data loaded');
+    $('#dlg').open&&$('#dlg').close();
+}
+Object.assign(A,{
+  rmsample:()=>{mut(()=>{purge(new Set(S.items.filter(i=>i.s).map(i=>i.id)));const ok=new Set(S.plans.filter(p=>!p.s).map(p=>p.id));S.plans=S.plans.filter(p=>!p.s);S.asg=S.asg.filter(a=>ok.has(a.planId))},'Sample data removed');$('#dlg').close()},
+  reset:()=>ask('Erase all syllabus, plans and revisions? Export a backup first if unsure.','Erase all',()=>mut(()=>{const s=S.settings;S=blank();S.settings=s},'All data erased'))
+});
+function move(id,dir){
+  const it=M.get(id),sib=kids(it.parentId||''),i=sib.indexOf(it),j=i+dir;if(j<0||j>=sib.length)return;
+  mut(()=>{sib.splice(i,1);sib.splice(j,0,it);sib.forEach((s,n)=>s.order=n)});
+}
+const CH={
+  status:el=>{
+    const id=el.dataset.id,v=el.value;
+    mut(()=>{
+      const it=M.get(id);
+      if(kids(id).length)it.manual=v==='auto'?null:v;
+      else{it.status=v;it.completedAt=v==='completed'?(it.completedAt||new Date().toISOString()):null}
+      it.updatedAt=Date.now();
+    },'Status updated');
+  },
+  asgdate:el=>{if(!el.value)return;mut(()=>{S.asg.find(a=>a.id===el.dataset.id).date=el.value},'Rescheduled')},
+  asgpri:el=>mut(()=>{S.asg.find(a=>a.id===el.dataset.id).priority=el.value}),
+  cplan:el=>{cal.plan=el.value;render()},
+  csubj:el=>{cal.subj=el.value;render()},
+  cby:el=>{cal.by=el.value;render()},
+  asub:el=>{an.sel=el.value;render()},
+  asgplan:()=>fillItems(),
+  all:el=>{el.closest('.f').querySelectorAll('.sc input').forEach(c=>c.checked=el.checked);pv()},
+  chk:el=>{el.closest('li').querySelectorAll('input').forEach(c=>c.checked=el.checked);pv()}
+};
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-a]');if(!el||el.tagName==='SELECT'||el.tagName==='INPUT')return;
+  const f=A[el.dataset.a];if(f)f(el,e);
+});
+document.addEventListener('change',e=>{
+  const el=e.target.closest('[data-c]');if(el&&CH[el.dataset.c])CH[el.dataset.c](el);
+  if(e.target.id==='flt'){flt=e.target.value;$('#tree').innerHTML=tree();tr($('#tree'))}
+  if(e.target.closest('#dlg')&&$('#pv'))pv();
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='q'){q=e.target.value.trim();$('#tree').innerHTML=tree();tr($('#tree'))}
+  if(e.target.closest('#dlg')&&$('#pv'))pv();
+});
+document.addEventListener('dblclick',e=>{
+  const b=e.target.closest('[data-a=ren]');if(!b)return;
+  const id=b.dataset.id,it=M.get(id),i=document.createElement('input');
+  i.value=it.name;i.setAttribute('aria-label','Rename');b.replaceWith(i);i.focus();i.select();
+  let done=false;
+  const fin=ok=>{if(done)return;done=true;const n=i.value.trim();if(ok&&n&&n!==it.name)mut(()=>{it.name=n;it.updatedAt=Date.now()},'Renamed');else render()};
+  i.onkeydown=ev=>{if(ev.key==='Enter')fin(true);if(ev.key==='Escape')fin(false)};
+  i.onblur=()=>fin(true);
+});
+/* drag & drop rescheduling */
+document.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.chip[data-id]');if(c){e.dataTransfer.setData('text/plain',c.dataset.id);e.dataTransfer.effectAllowed='move'}});
+document.addEventListener('dragover',e=>{const c=e.target.closest&&e.target.closest('.cell');if(c){e.preventDefault();document.querySelectorAll('.cell.over').forEach(x=>x.classList.remove('over'));c.classList.add('over')}});
+document.addEventListener('drop',e=>{
+  const c=e.target.closest&&e.target.closest('.cell');if(!c)return;e.preventDefault();
+  const id=e.dataTransfer.getData('text/plain'),a=S.asg.find(x=>x.id===id);
+  if(a&&a.date!==c.dataset.day)mut(()=>{a.date=c.dataset.day},'Rescheduled to '+fmt(c.dataset.day));else render();
+});
+$('#imp').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    let o=null;try{o=norm(JSON.parse(r.result))}catch(x){}
+    if(!o)return toast('That file is not a valid backup — nothing was changed.');
+    dlg('Replace current data?',`<p>This backup contains <b>${o.items.length}</b> syllabus items, <b>${o.plans.length}</b> plans, <b>${o.asg.length}</b> tasks and <b>${o.revs.length}</b> revision records.</p><p class="mu">Your current data (${S.items.length} items, ${S.plans.length} plans) will be replaced. You can undo right after.</p>`,'Replace data',()=>{mut(()=>{S=o},'Backup restored')});
+  };
+  r.readAsText(f);e.target.value='';
+});
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(NAV.some(n=>n[0]===h)&&h!==route){route=h;render()}});
+/* Default syllabus (Bengali chapter titles). Re-runnable: it fills gaps and renames placeholder chapters, keeping progress and edits. */
+const R=n=>Array.from({length:n},(_,i)=>'=Chapter '+(i+1));
+const DEF=[
+['Physics',[["ভৌতজগত ও পরিমাপ", "ভেক্টর", "গতিবিদ্যা", "নিউটনীয় বলবিদ্যা", "কাজ-শক্তি-ক্ষমতা", "মহাকর্ষ ও অভিকর্ষ", "পদার্থের গাঠনিক ধর্ম", "পর্যাবৃত্ত গতি", "তরঙ্গ", "আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব"],["তাপগতিবিদ্যা", "স্থির তড়িৎ", "চলতড়িৎ", "তড়িৎ প্রবাহের চুম্বকক্রিয়া", "তাড়িত-চৌম্বক আবেশ ও দিক পরিবর্তী প্রবাহ", "জ্যামিতিক আলোকবিজ্ঞান", "ভৌত আলোকবিজ্ঞান", "আধুনিক পদার্থবিজ্ঞান", "পরমাণুর মডেল ও নিউক্লিয়ার পদার্থবিজ্ঞান", "অর্ধ-পরিবাহী ও ইলেকট্রনিক্স", "জ্যোতির্বিজ্ঞান"]]],
+['Chemistry',[["ল্যাবরেটরির নিরাপদ ব্যবহার", "গুণগত রসায়ন", "মৌলের পর্যায়বৃত্তিক ধর্ম ও রাসায়নিক বন্ধন", "রাসায়নিক পরিবর্তন", "কর্মমুখী রসায়ন"],["পরিবেশ রসায়ন", "জৈব রসায়ন", "পরিমাণগত রসায়ন", "তড়িৎ রসায়ন", "অর্থনৈতিক রসায়ন"]]],
+['Biology',[["কোষ ও এর গঠন", "কোষ বিভাজন", "কোষ রসায়ন", "অণুজীব", "শৈবাল ও ছত্রাক", "ব্রায়োফাইটা ও টেরেডোফাইটা", "নগ্নবীজী ও আবৃতবীজী উদ্ভিদ", "টিস্যু ও টিস্যুতন্ত্র", "উদ্ভিদ শারীরতত্ত্ব", "উদ্ভিদ প্রজনন", "জীবপ্রযুক্তি", "জীবের পরিবেশ, বিস্তার ও সংরক্ষণ"],["প্রাণীর বিভিন্নতা ও শ্রেণিবিন্যাস", "প্রাণীর পরিচিতি", "পরিপাক ও শোষণ", "রক্ত ও সংবহন", "শ্বসন ও শ্বাসক্রিয়া", "বর্জ্য ও নিষ্কাশন", "চলন ও অঙ্গচালনা", "সমন্বয় ও নিয়ন্ত্রণ", "মানব জীবনের ধারাবাহিকতা", "মানবদেহের প্রতিরক্ষা", "জিনতত্ত্ব ও বিবর্তন", "প্রাণীর আচরণ"]]],
+['Agriculture',[["বাংলাদেশের কৃষি", "ভূমি সম্পৃক্ত কৃষি প্রযুক্তি", "বিশেষ উৎপাদন সম্পৃক্ত কৃষি প্রযুক্তি", ["কৃষি ও জলবায়ু", "শর্ট সিলেবাস বহির্ভূত"], "মাঠ ও উদ্যান ফসল উৎপাদন", "ফল ও শাকসবজি প্রক্রিয়াজাতকরণ ও সংরক্ষণ"],["মৎস্য চাষ", "পোল্ট্রি পালন", "পশু পালন", "বনায়ন", ["কৃষি অর্থনীতি ও সমবায়", "শর্ট সিলেবাস বহির্ভূত"]]]],
+['ICT',[["তথ্য ও যোগাযোগ প্রযুক্তি :- বিশ্ব ও বাংলাদেশ প্রেক্ষিত", "কমিউনিকেশন সিস্টেমস ও নেটওয়ার্কিং", "সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস", "ওয়েব ডিজাইন পরিচিতি এবং HTML", "প্রোগ্রামিং ভাষা", "ডেটাবেজ ম্যানেজমেন্ট সিস্টেম"]]],
+['Bangla',[[['=গদ্য','সকল গদ্য',["বাঙ্গালার নব্য লেখকদিগের প্রতি নিবেদন", "অপরিচিতা", "সাহিত্যে খেলা", "বিলাসী", "অর্ধাঙ্গী", "যৌবনের গান", "জীবন ও বৃক্ষ", "গন্তব্য কাবুল", "মাসি-পিসি", "কাপিলদাস মুর্মুর শেষ কাজ", "রেইনকোট", "নেকলেস"]],['=কবিতা','সকল কবিতা',["ঋতু-বর্ণন", "বিভীষণের প্রতি মেঘনাদ", "সোনার তরী", "বিদ্রোহী", "সুচেতনা", "প্রতিদান", "তাহারেই পড়ে মনে", "পদ্মা", "ফেব্রুয়ারি ১৯৬৯", "আঠারো বছর বয়স", "আমি কিংবদন্তি কথা বলছি", "প্রত্যাবর্তনের লজ্জা"]],'=উপন্যাস: লালসালু','=নাটক: সিরাজউদ্দৌলা'],["বাংলা উচ্চারণের নিয়ম", "বাংলা বানানের নিয়ম", "বাংলা ভাষার ব্যকরণিক শব্দশ্রেণি", "বাংলা শব্দ গঠন (উপসর্গ, প্রত্যয়, সমাস)", "বাক্যতত্ত্ব", "বাংলা ভাষার অপপ্রয়োগ ও শুদ্ধ প্রয়োগ", "পারিভাষিক শব্দ বা অনুবাদ", "দিনলিপি লিখন/অভিজ্ঞতা বর্ণন এবং ভাষণ/প্রতিবেদন", "বৈদ্যুতিন চিঠি/খুদে বার্তা এবং পত্রলিখন/আবেদনপত্র", "সারাংশ, সারমর্ম, ভাবসম্প্রসারণ", "সংলাপ রচনা/খুদে গল্প রচনা", "প্রবন্ধ-নিবন্ধ রচনা"]]],
+['English',[R(10),R(10)]]
+];
+function syncDefault(){
+  const now=Date.now();
+  const kid=p=>S.items.filter(i=>i.parentId===p).sort((a,b)=>a.order-b.order);
+  const mk=(name,type,parentId,order,o)=>{const it={id:uid(),name,type,parentId,order,status:'not_started',manual:null,notes:'',difficulty:'',color:'',createdAt:now,updatedAt:now,completedAt:null,...o};S.items.push(it);return it};
+  const ph=c=>/^Chapter \d+$/.test(c.name);
+  DEF.forEach(([n,ps])=>{
+    let sub=S.items.find(i=>!i.parentId&&i.name===n);
+    if(!sub){const r=kid('').length;sub=mk(n,'subject','',r,{color:PAL[r%PAL.length]})}
+    ps.forEach((list,pi)=>{
+      const pn=['1st','2nd'][pi]+' Paper';
+      const pp=kid(sub.id).find(x=>x.name===pn)||mk(pn,'paper',sub.id,kid(sub.id).length);
+      const cur=kid(pp.id);
+      list.forEach((e,k)=>{
+        const[t,notes,tp]=Array.isArray(e)?e:[e];
+        const nm=t[0]==='='?t.slice(1):'Chapter '+(k+1)+': '+t;
+        let c=cur[k];
+        if(!c)c=mk(nm,'chapter',pp.id,k);else if(ph(c)){c.name=nm;c.updatedAt=now}
+        if(notes&&!c.notes)c.notes=notes;
+        (tp||[]).forEach(x=>{if(!kid(c.id).some(y=>y.name===x))mk(x,'topic',c.id,kid(c.id).length)});
+      });
+      cur.slice(list.length).forEach(c=>{if(ph(c)&&c.status==='not_started'&&!kid(c.id).length&&!S.revs.some(r=>r.itemId===c.id)&&!S.asg.some(a=>a.itemId===c.id))purge(new Set([c.id]))});
+    });
+  });
+  S.defVer=2;
+}
+Object.assign(A,{
+  defaults:()=>{
+    const go=()=>{mut(syncDefault,'Default syllabus updated');$('#dlg').open&&$('#dlg').close()};
+    S.items.length?ask('Update the default syllabus? Placeholder chapter names are replaced with the real titles; your progress, edited names and notes are kept.','Update',go):go();
+  },
+  lang:()=>mut(()=>{S.settings.lang=S.settings.lang==='bn'?'en':'bn'}),
+  remplan:()=>openRemaining(),
+  syncrem:el=>syncRemaining(el.dataset.id),
+  addbq:el=>openBq(null,el.dataset&&el.dataset.id),
+  editbq:el=>openBq(el.dataset.id),
+  delbq:el=>{mut(()=>{S.board=S.board.filter(r=>r.id!==el.dataset.id)},'Analysis deleted');$('#dlg').open&&$('#dlg').close()},
+  skippaper:el=>doSkip([el.dataset.id]),
+  skipall:()=>doSkip(boardTargets().map(t=>t.id)),
+  restore:el=>{
+    const b=BQ(el.dataset.id);if(!b.total)return toast('Add past-paper analysis first.');
+    const L=[];b.rows.forEach(r=>{if(!r.imp)lv(r.it.id).forEach(l=>{if(l.status==='skipped')L.push(l)})});
+    if(!L.length)return toast('No skipped chapters to restore.');
+    mut(()=>L.forEach(l=>{l.status='not_started';l.updatedAt=Date.now()}),'Restored '+L.length+' items.');
+  }
+});
+CH.cover=el=>{const v=Math.min(100,Math.max(10,+el.value||80));mut(()=>{S.settings.boardCover=v})};
+let fresh=false;try{fresh=localStorage.getItem(K)===null}catch(e){}
+if((fresh&&!S.items.length)||(S.items.some(i=>!i.parentId&&i.name==='Physics')&&(S.defVer||0)<2)){syncDefault();save()}
+if((S.boardVer||0)<1&&S.items.length){seedBoard();save()}
+{let ch=false;S.items.forEach(i=>{if(i.notes==='সকল গদ্য Free'||i.notes==='সকল কবিতা Free'){i.notes=i.notes.replace(' Free','');ch=true}});if(ch)save()}
+if(!NAV.some(n=>n[0]===route))route='dashboard';
+render();
+</script>
+</body>
+</html>
